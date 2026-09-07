@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="640" viewBox="0 0 1100 640">
+<defs><linearGradient id="room" x2="0" y2="1"><stop stop-color="#d6d3c7"/><stop offset="1" stop-color="#ece9df"/></linearGradient><linearGradient id="vase" x2="1" y2="0"><stop stop-color="#9a5a38"/><stop offset=".45" stop-color="#d39363"/><stop offset="1" stop-color="#a2633c"/></linearGradient><linearGradient id="chair" x2="1" y2="1"><stop stop-color="#8b9168"/><stop offset="1" stop-color="#5c6440"/></linearGradient></defs>
+<rect width="1100" height="640" rx="12" fill="#f6f4ed"/>
+<path d="M0 43h1100" stroke="#e2e0d7"/><circle cx="22" cy="22" r="4" fill="#d0cec5"/><circle cx="37" cy="22" r="4" fill="#d0cec5"/><circle cx="52" cy="22" r="4" fill="#d0cec5"/>
+<rect x="399" y="12" width="302" height="21" rx="5" fill="#eae8e0"/><text x="550" y="26" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#88867d">forma — objects for living</text>
+<g font-family="Arial,sans-serif" fill="#343c27"><text x="45" y="100" font-size="40" font-weight="700" letter-spacing="-2">forma.</text><g font-size="11"><text x="385" y="88">Shop all</text><text x="480" y="88">Our philosophy</text><text x="615" y="88">Journal</text><text x="943" y="88">Bag (0) ↗</text></g></g>
+<path d="M45 122h1010" stroke="#dcdacf"/>
+<text x="48" y="166" font-family="Arial,sans-serif" font-size="9" letter-spacing="2" fill="#757b61">LESS, BUT BETTER.</text>
+<text x="44" y="231" font-family="Arial,sans-serif" font-size="58" letter-spacing="-3" fill="#343c27">Objects for</text><text x="44" y="292" font-family="Georgia,serif" font-style="italic" font-size="62" letter-spacing="-2" fill="#343c27">everyday living.</text>
+<text x="47" y="334" font-family="Arial,sans-serif" font-size="12" fill="#76786c">Thoughtful pieces. Natural materials.</text><text x="47" y="354" font-family="Arial,sans-serif" font-size="12" fill="#76786c">A little more room for what matters.</text>
+<rect x="47" y="388" width="151" height="41" rx="21" fill="#37432c"/><text x="68" y="413" font-family="Arial,sans-serif" font-size="11" fill="#fff">Explore collection</text><text x="177" y="414" font-family="Arial,sans-serif" font-size="15" fill="#fff">↗</text>
+<rect x="517" y="145" width="538" height="313" rx="4" fill="url(#room)"/><path d="M517 383h538M875 145v238" stroke="#cbc8bb"/>
+<ellipse cx="795" cy="419" rx="175" ry="17" fill="#b5b2a3" opacity=".3"/>
+<path d="m735 337-16 93m129-94 20 94m-137-24h133" fill="none" stroke="#5e4731" stroke-width="13"/>
+<path d="M717 256q0-48 48-48h47q43 0 43 43v92H717z" fill="url(#chair)"/><rect x="700" y="327" width="175" height="35" rx="17" fill="#858d60"/><path d="M740 222v98m24-104v107m24-107v107m25-107v107m23-97v91" stroke="#adb28b" opacity=".3" stroke-width="2"/>
+<ellipse cx="971" cy="368" rx="43" ry="10" fill="#a78e70"/><path d="M939 369v51m64-51v51" stroke="#9d8263" stroke-width="6"/><path d="M960 327q-21 32 0 38h22q18-7-1-38v-21h-21z" fill="url(#vase)"/><ellipse cx="970" cy="307" rx="10" ry="3" fill="#86472b"/>
+<g font-family="Arial,sans-serif"><text x="45" y="500" font-size="18" fill="#343c27">Considered essentials</text><text x="966" y="500" font-size="11" fill="#76786c">View all ↗</text>
+<rect x="45" y="520" width="320" height="76" rx="4" fill="#e9e4d8"/><rect x="390" y="520" width="320" height="76" rx="4" fill="#e1e1d4"/><rect x="735" y="520" width="320" height="76" rx="4" fill="#e9ded0"/>
+<path d="M87 540q-20 38 3 43h28q21-8 0-43v-9H87z" fill="url(#vase)"/><text x="154" y="553" font-size="13" fill="#343c27">Terra vase</text><text x="154" y="575" font-size="10" fill="#76786c">Hand-finished ceramics</text>
+<ellipse cx="446" cy="560" rx="30" ry="12" fill="#a6ac8a"/><path d="M416 559q4 29 30 28t30-28" fill="#8f9870"/><text x="497" y="553" font-size="13" fill="#343c27">Everyday bowl</text><text x="497" y="575" font-size="10" fill="#76786c">Made for your rituals</text>
+<path d="M778 578v-30q25-30 50 0v30z" fill="#c09c77"/><path d="M803 529v51" stroke="#a4825e"/><text x="844" y="553" font-size="13" fill="#343c27">Soft light</text><text x="844" y="575" font-size="10" fill="#76786c">A warmer kind of evening</text></g>
+</svg>
