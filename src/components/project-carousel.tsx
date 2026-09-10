@@ -52,21 +52,21 @@ export function ProjectCarousel({ projects, locale, text }: { projects: Project[
     <div className="project-track" ref={trackRef} tabIndex={0} onKeyDown={onKeyDown} aria-label={text.hint}>
       {projects.map((project, index) => {
         const details = project.text[locale];
+        const hasLinks = Boolean(project.website || project.repository);
         return <article key={project.id} className={`project-card project-${project.theme}`} aria-label={`${text.slide} ${index + 1} ${text.of} ${projects.length}: ${project.name}`}>
           <div className="project-visual">
-            <div className="project-visual-top"><span className="concept-badge"><span className="tiny-dot" />{project.demo ? text.demo : project.status === "wip" ? (locale === "ru" ? "В разработке" : "In progress") : details.category}</span><span className="project-index">{String(index + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}</span></div>
+            <div className="project-visual-top"><span className="concept-badge"><span className="tiny-dot" />{project.status === "wip" ? (locale === "ru" ? "В разработке" : "In progress") : details.category}</span><span className="project-index">{String(index + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}</span></div>
             <Image src={project.preview} alt={details.alt} width={1100} height={640} className="project-preview" sizes="(max-width: 700px) 88vw, 75vw" unoptimized={!project.preview.startsWith("/")} />
-            <span className="concept-caption">{project.demo ? text.concept : (locale === "ru" ? "Интерфейс проекта" : "Project interface")}</span>
+            <span className="concept-caption">{text.concept}</span>
           </div>
           <div className="project-details">
             <div className="project-title-row"><div><p className="project-category">{details.category}</p><h3>{project.name}<span>.</span></h3></div><span className="project-corner-arrow"><ArrowIcon /></span></div>
             <p className="project-description">{details.description}</p>
             <div className="project-tags">{project.technologies.map((technology) => <span key={technology}>{technology}</span>)}</div>
-            <div className="project-bottom"><div><span className="role-label">{project.demo ? text.role : (locale === "ru" ? "Моя роль" : "My role")}</span><p>{details.role}</p></div><div className="project-links">
+            <div className="project-bottom"><div><span className="role-label">{text.role}</span><p>{details.role}</p></div>{hasLinks && <div className="project-links">
               {project.website && <a href={project.website} target="_blank" rel="noopener noreferrer">{text.website}<ArrowIcon /></a>}
               {project.repository && <a href={project.repository} target="_blank" rel="noopener noreferrer">{text.repository}<ArrowIcon /></a>}
-              {!project.website && !project.repository && <span>{project.demo ? text.pending : (locale === "ru" ? "Ссылки скоро появятся" : "Links coming soon")}</span>}
-            </div></div>
+            </div>}</div>
           </div>
         </article>;
       })}

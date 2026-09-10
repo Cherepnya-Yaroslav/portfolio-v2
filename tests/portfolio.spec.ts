@@ -21,7 +21,7 @@ for (const locale of ["ru", "en"]) {
       expect(dimensions.document).toBeLessThanOrEqual(width);
       expect(dimensions.titleRight).toBeLessThanOrEqual(width);
       expect(dimensions.titleLeft).toBeGreaterThanOrEqual(0);
-      await expect(page.locator(".project-card")).toHaveCount(3);
+      await expect(page.locator(".project-card").first()).toBeVisible();
       await page.locator(".project-visual").first().scrollIntoViewIfNeeded();
       await expect.poll(() => page.locator(".project-preview").first().evaluate((image: HTMLImageElement) => image.complete && image.naturalWidth > 0)).toBe(true);
       await page.locator("#contact").scrollIntoViewIfNeeded();
@@ -47,24 +47,25 @@ test("carousel arrows, keyboard boundaries, and resize preserve position", async
   const next = page.getByRole("button", { name: "Next project" });
   const counter = page.locator(".slide-counter");
   const track = page.locator(".project-track");
+  const total = await page.locator(".project-card").count();
+  test.skip(total < 2, "Carousel navigation needs at least two published projects.");
   await expect(previous).toBeDisabled();
   await next.click();
-  await expect(counter).toContainText("02 / 03");
-  await next.click();
-  await expect(counter).toContainText("03 / 03");
-  await expect(next).toBeDisabled();
-  await page.setViewportSize({ width: 390, height: 844 });
-  await expect(counter).toContainText("03 / 03");
-  await expect.poll(async () => track.evaluate((element) => Math.abs(element.children[2].getBoundingClientRect().left - element.getBoundingClientRect().left))).toBeLessThan(3);
+  await expect(counter).toContainText(`02 / ${String(total).padStart(2, "0")}`);
   await track.focus();
+  await page.keyboard.press("End");
+  await expect(counter).toContainText(`${String(total).padStart(2, "0")} / ${String(total).padStart(2, "0")}`);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await expect(counter).toContainText(`${String(total).padStart(2, "0")} / ${String(total).padStart(2, "0")}`);
+  await expect.poll(async () => track.evaluate((element) => Math.abs(element.children[element.children.length - 1].getBoundingClientRect().left - element.getBoundingClientRect().left))).toBeLessThan(3);
   await page.keyboard.press("Home");
-  await expect(counter).toContainText("01 / 03");
+  await expect(counter).toContainText(`01 / ${String(total).padStart(2, "0")}`);
   await page.keyboard.press("ArrowRight");
-  await expect(counter).toContainText("02 / 03");
+  await expect(counter).toContainText(`02 / ${String(total).padStart(2, "0")}`);
   await page.keyboard.press("End");
   await expect(next).toBeDisabled();
   await page.keyboard.press("ArrowLeft");
-  await expect(counter).toContainText("02 / 03");
+  await expect(counter).toContainText(`${String(total - 1).padStart(2, "0")} / ${String(total).padStart(2, "0")}`);
 });
 
 test("language switching preserves visible section in both directions", async ({ page }) => {
@@ -81,15 +82,15 @@ test("language switching preserves visible section in both directions", async ({
   await expect(page.locator("html")).toHaveAttribute("lang", "ru");
 });
 
-test("demo content is explicit, anchors work, and reduced motion is respected", async ({ page }) => {
+test("production content, anchors work, and reduced motion is respected", async ({ page }) => {
   await page.goto("/ru");
   await page.keyboard.press("Tab");
   await expect(page.locator(".skip-link")).toBeFocused();
   await page.keyboard.press("Enter");
   await page.locator(".pill-button").click();
   await expect(page).toHaveURL(/#projects$/);
-  await expect(page.getByText("Демо — ссылки появятся позже", { exact: true })).toHaveCount(3);
-  await expect(page.locator(".contact-placeholder")).toHaveCount(3);
+  await expect(page.getByText(/Демо|заглуш|появится позже|Предварительное|Пример стека/i)).toHaveCount(0);
+  await expect(page.locator(".contact-row[href]")).toHaveCount(3);
   await expect(page.locator('a[href="#"], a[href=""], button:not([aria-label])')).toHaveCount(0);
   const animation = await page.locator("h1").evaluate((element) => getComputedStyle(element).animationName);
   expect(animation).toBe("none");
@@ -101,6 +102,8 @@ test("mobile touch gesture advances carousel", async ({ browser }) => {
   const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, reducedMotion: "reduce" });
   const page = await context.newPage();
   await page.goto("http://127.0.0.1:3100/en#projects");
+  const total = await page.locator(".project-card").count();
+  test.skip(total < 2, "Touch gesture needs at least two published projects.");
   await page.locator(".project-visual").first().scrollIntoViewIfNeeded();
   const rect = await page.locator(".project-visual").first().boundingBox();
   const client = await context.newCDPSession(page);
@@ -110,7 +113,7 @@ test("mobile touch gesture advances carousel", async ({ browser }) => {
     await client.send("Input.dispatchTouchEvent", { type: "touchMove", touchPoints: [{ x, y }] });
   }
   await client.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
-  await expect(page.locator(".slide-counter")).toContainText("02 / 03");
+  await expect(page.locator(".slide-counter")).toContainText(`02 / ${String(total).padStart(2, "0")}`);
   await context.close();
 });
 

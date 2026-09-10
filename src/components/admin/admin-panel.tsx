@@ -15,7 +15,7 @@ function AdminHeader() {
 }
 
 function SetupNotice() {
-  return <main className="admin-entry"><span className="admin-kicker">ПЕРВОЕ ПОДКЛЮЧЕНИЕ</span><h1>Место для<br /><span>ваших проектов.</span></h1><p>Редактор готов. Подключите новый проект Supabase, чтобы войти и публиковать работы.</p><ol className="admin-setup-steps"><li>Создайте проект в Supabase и выполните SQL из инструкции <code>docs/admin-setup.md</code>.</li><li>Добавьте Project URL и публичный ключ в локальные настройки приложения.</li><li>Создайте пользователя, назначьте его администратором и перезапустите сайт.</li></ol><p className="admin-footnote">Данные старого портфолио не затрагиваются. Пока подключение не настроено, на сайте показаны демопроекты.</p><a className="admin-button" href="https://supabase.com/dashboard" target="_blank" rel="noopener noreferrer">Открыть Supabase<ArrowIcon /></a></main>;
+  return <main className="admin-entry"><span className="admin-kicker">ПЕРВОЕ ПОДКЛЮЧЕНИЕ</span><h1>Управление<br /><span>проектами.</span></h1><p>Редактор готов. Подключите проект Supabase, чтобы войти и публиковать работы.</p><ol className="admin-setup-steps"><li>Создайте проект в Supabase и выполните SQL из инструкции <code>docs/admin-setup.md</code>.</li><li>Добавьте Project URL и публичный ключ в локальные настройки приложения.</li><li>Создайте пользователя, назначьте его администратором и перезапустите сайт.</li></ol><p className="admin-footnote">Данные старого портфолио не затрагиваются. После подключения опубликованные работы управляются через эту админку.</p><a className="admin-button" href="https://supabase.com/dashboard" target="_blank" rel="noopener noreferrer">Открыть Supabase<ArrowIcon /></a></main>;
 }
 
 function LoginForm() {
