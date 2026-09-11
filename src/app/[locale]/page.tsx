@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import { Suspense } from "react";
+import { LoadingImage } from "@/components/loading-image";
 import { notFound } from "next/navigation";
-import { contacts, copy, isLocale, profile } from "@/content/portfolio";
+import { contacts, copy, isLocale, profile, type Locale } from "@/content/portfolio";
 import { getPublishedProjects } from "@/lib/projects/public";
 import { ArrowIcon, Asterisk } from "@/components/icons";
 import { LanguageSwitch } from "@/components/language-switch";
@@ -26,7 +27,6 @@ export default async function Portfolio({ params }: PageProps) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
   const text = copy[locale];
-  const { projects, source } = await getPublishedProjects();
 
   return <>
     <a className="skip-link" href="#main">{text.skip}</a>
@@ -40,7 +40,7 @@ export default async function Portfolio({ params }: PageProps) {
       <section className="hero page-padding" id="hero" aria-labelledby="hero-title">
         <div className="hero-topline"><span>{text.portfolio}</span><span className="hero-discipline"><span className="tiny-dot" />WEB DEVELOPMENT</span></div>
         <h1 id="hero-title" className={`hero-title hero-title-${locale}`}>{profile.name[locale]}</h1>
-        <div className="hero-portrait"><div className="portrait-parallax"><Image src={profile.portrait} alt={text.hero.alt} width={941} height={1672} priority sizes="(max-width: 700px) 95vw, (max-width: 1023px) 58vw, 48vw" className="portrait-image" /></div></div>
+        <div className="hero-portrait"><div className="portrait-parallax"><LoadingImage src={profile.portrait} placeholder="blur" loadingLabel={locale === "ru" ? "Загружаем портрет" : "Loading portrait"} errorLabel={locale === "ru" ? "Портрет недоступен" : "Portrait unavailable"} alt={text.hero.alt} width={941} height={1672} preload sizes="(max-width: 700px) 95vw, (max-width: 1023px) 65vw, (min-width: 1840px) 920px, 50vw" className="portrait-image" /></div></div>
         <div className="hero-copy"><p className="hero-role">{text.developer}</p><h2>{text.hero.intro}<br /><span>{text.hero.ending}</span></h2><p className="hero-description">{text.hero.description}</p><a className="pill-button" href="#projects">{text.hero.cta}<span><ArrowIcon direction="down" /></span></a></div>
         <div className="hero-side"><Asterisk /><p>{text.hero.side}</p></div>
         <div className="hero-bottom"><span><span className="small-cross">+</span>{text.hero.scroll}</span><span className="hero-bottom-right">{profile.name[locale]} © 2026<ArrowIcon direction="down" /></span></div>
@@ -55,8 +55,9 @@ export default async function Portfolio({ params }: PageProps) {
       </section>
 
       <section id="projects" className="projects-section section-space" aria-labelledby="projects-title">
-        <div className="projects-heading page-padding" data-reveal><div><p className="eyebrow"><span>02 /</span>{text.work.eyebrow}</p><h2 id="projects-title">{text.work.title}<br /><span>{text.work.accent}</span><span className="project-count">({source === "error" ? "—" : String(projects.length).padStart(2, "0")})</span></h2></div><p className="projects-note">{text.work.note}</p></div>
-        {projects.length ? <ProjectCarousel projects={projects} locale={locale} text={text.work} /> : <div className="projects-empty page-padding"><p>{source === "error" ? (locale === "ru" ? "Не удалось загрузить проекты. Попробуйте чуть позже." : "Projects could not be loaded. Please try again shortly.") : (locale === "ru" ? "Новые проекты скоро появятся здесь." : "New projects will appear here soon.")}</p>{source === "error" && <ProjectsRetry locale={locale} />}</div>}
+        <Suspense fallback={<ProjectsContent locale={locale} />}>
+          <PublishedProjects locale={locale} />
+        </Suspense>
       </section>
     </main>
 
@@ -69,5 +70,19 @@ export default async function Portfolio({ params }: PageProps) {
       })}</div>
       <div className="footer-bottom"><a href="#hero" className="wordmark" aria-label={text.footer.top}>ya<span>.</span></a><span>© 2026 {profile.name[locale]}<span className="footer-divider">/</span>{text.footer.signature}</span><a href="#hero" className="back-top">{text.footer.top}<ArrowIcon direction="up" /></a></div>
     </footer>
+  </>;
+}
+
+async function PublishedProjects({ locale }: { locale: Locale }) {
+  const result = await getPublishedProjects();
+  return <ProjectsContent locale={locale} result={result} />;
+}
+
+function ProjectsContent({ locale, result }: { locale: Locale; result?: Awaited<ReturnType<typeof getPublishedProjects>> }) {
+  const text = copy[locale];
+  const { projects, source } = result ?? { projects: [], source: "loading" };
+  return <>
+        <div className="projects-heading page-padding" data-reveal><div><p className="eyebrow"><span>02 /</span>{text.work.eyebrow}</p><h2 id="projects-title">{text.work.title}<br /><span>{text.work.accent}</span><span className="project-count">({source === "error" || source === "loading" ? "—" : String(projects.length).padStart(2, "0")})</span></h2></div><p className="projects-note">{text.work.note}</p></div>
+        {source === "loading" ? <div className="projects-loading page-padding" role="status"><span className="image-loader" aria-hidden="true">✳</span><p>{locale === "ru" ? "Загружаем проекты" : "Loading projects"}</p></div> : projects.length ? <ProjectCarousel projects={projects} locale={locale} text={text.work} /> : <div className="projects-empty page-padding"><p>{source === "error" ? (locale === "ru" ? "Не удалось загрузить проекты. Попробуйте чуть позже." : "Projects could not be loaded. Please try again shortly.") : (locale === "ru" ? "Новые проекты скоро появятся здесь." : "New projects will appear here soon.")}</p>{source === "error" && <ProjectsRetry locale={locale} />}</div>}
   </>;
 }

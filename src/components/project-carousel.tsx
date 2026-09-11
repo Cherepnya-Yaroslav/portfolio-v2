@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { LoadingImage } from "./loading-image";
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from "react";
 import type { Dictionary, Locale, Project } from "@/content/portfolio";
 import { ArrowIcon } from "./icons";
@@ -56,7 +56,7 @@ export function ProjectCarousel({ projects, locale, text }: { projects: Project[
         return <article key={project.id} className={`project-card project-${project.theme}`} aria-label={`${text.slide} ${index + 1} ${text.of} ${projects.length}: ${project.name}`}>
           <div className="project-visual">
             <div className="project-visual-top"><span className="concept-badge"><span className="tiny-dot" />{project.status === "wip" ? (locale === "ru" ? "В разработке" : "In progress") : details.category}</span><span className="project-index">{String(index + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}</span></div>
-            <Image src={project.preview} alt={details.alt} width={1100} height={640} className="project-preview" sizes="(max-width: 700px) 88vw, 75vw" unoptimized={!project.preview.startsWith("/")} />
+            <LoadingImage key={project.preview} src={project.preview} loadingLabel={locale === "ru" ? "Загружаем обложку" : "Loading preview"} errorLabel={locale === "ru" ? "Обложка недоступна" : "Preview unavailable"} alt={details.alt} width={1100} height={640} className="project-preview" sizes="(max-width: 700px) 88vw, 75vw" />
             <span className="concept-caption">{text.concept}</span>
           </div>
           <div className="project-details">

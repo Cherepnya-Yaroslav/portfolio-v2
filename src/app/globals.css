@@ -46,7 +46,7 @@ svg { flex-shrink: 0; }
 .hero-discipline .tiny-dot { color: var(--lavender); }
 .hero-title { position: absolute; top: 68px; left: calc(var(--gutter) - 7px); right: var(--gutter); font-size: 20.9vw; letter-spacing: -0.07em; line-height: 1.1; font-weight: 800; text-transform: uppercase; background: linear-gradient(170deg, #6960ff 16%, #aaa3fc 67%, #d3cfff 100%); background-clip: text; color: transparent; white-space: nowrap; animation: title-enter 1100ms cubic-bezier(.16,1,.3,1) both; }
 .hero-title-en { font-size: 20.3vw; letter-spacing: -.078em; }
-.hero-portrait { position: absolute; width: 50vw; max-width: 920px; left: 50%; top: 121px; height: calc(100% - 160px); transform: translateX(-40%); z-index: 2; pointer-events: none; overflow: hidden; mask-image: linear-gradient(to bottom, #000 75%, transparent 100%); animation: portrait-enter 1300ms 160ms cubic-bezier(.16,1,.3,1) both; }
+.hero-portrait { position: absolute; width: 50vw; max-width: 920px; left: 50%; top: 121px; height: calc(100% - 160px); transform: translateX(-40%); z-index: 2; pointer-events: none; overflow: hidden; mask-image: linear-gradient(to bottom, #000 75%, transparent 100%);  }
 .portrait-parallax { height: 100%; transition: transform 550ms cubic-bezier(.16,1,.3,1); }
 .portrait-image { width: 100%; height: auto; display: block; }
 .hero-copy { position: absolute; bottom: 120px; left: var(--gutter); width: 27%; max-width: 420px; z-index: 3; animation: fade-up 900ms 450ms both; }
@@ -287,4 +287,17 @@ a.contact-row:hover .contact-name { color: var(--lavender); }
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .reveal-pending { opacity: 1; transform: none; }
   .portrait-parallax { transform: none !important; }
+}
+
+/* Image readiness comes from load/error events, never a simulated progress timer. */
+.image-status { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 12px; font-size: var(--text-xs); z-index: 1; pointer-events: none; }
+.hero-portrait .image-status { color: var(--lavender); background: radial-gradient(ellipse, #9990ff12, transparent 65%); }
+.image-loader { display: inline-block; font-size: 36px; line-height: 1; animation: image-loading 2.5s linear infinite; }
+.image-status-error { opacity: .8; }
+[data-image-state="error"] { visibility: hidden; }
+.portrait-image[data-image-state="ready"] { animation: portrait-enter 550ms cubic-bezier(.16,1,.3,1) both; }
+.projects-loading { min-height: 620px; display: flex; justify-content: center; align-items: center; gap: 18px; color: var(--lavender); }
+@keyframes image-loading { to { rotate: 360deg; } }
+@media (prefers-reduced-motion: reduce) {
+  .image-loader, .portrait-image[data-image-state="ready"] { animation: none; }
 }

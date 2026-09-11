@@ -1,10 +1,12 @@
+import portrait from "../../public/images/yaroslav.webp";
+
 export const locales = ["ru", "en"] as const;
 export type Locale = (typeof locales)[number];
 export const isLocale = (value: string): value is Locale => locales.some((locale) => locale === value);
 
 export const profile = {
   name: { ru: "Ярослав", en: "Yaroslav" },
-  portrait: "/images/yaroslav.webp",
+  portrait,
   frontendTechnologies: ["JavaScript", "TypeScript", "React.js", "Next.js", "Redux", "Material UI", "HTML", "CSS", "Sass"],
   fullstackTechnologies: ["Node.js", "REST API", "Strapi", "Headless CMS", "Nginx", "Docker", "GitHub Actions", "VPS", "Telegram Web Apps"],
 };

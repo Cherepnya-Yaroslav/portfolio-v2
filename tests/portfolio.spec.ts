@@ -124,7 +124,7 @@ test("screenshots and full motion have no runtime errors", async ({ page }, test
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto("/ru");
   await page.evaluate(() => document.fonts.ready);
-  await page.waitForFunction(() => document.getAnimations().filter((animation) => animation.playState === "running").length === 0);
+  await page.waitForFunction(() => document.getAnimations().filter((animation) => animation.playState === "running" && animation.effect?.getTiming().iterations !== Infinity).length === 0);
   await page.mouse.move(800, 500);
   await expect.poll(() => page.locator(".portrait-parallax").evaluate((element) => element.style.transform)).toContain("translate3d");
   await page.screenshot({ path: testInfo.outputPath("desktop-hero.png") });
@@ -137,3 +137,27 @@ test("screenshots and full motion have no runtime errors", async ({ page }, test
   await page.screenshot({ path: testInfo.outputPath("mobile-full.png"), fullPage: true });
   expect(errors).toEqual([]);
 });
+
+for (const outcome of ["loaded", "failed"] as const) {
+  test(`portrait loading ends on ${outcome} without blocking navigation`, async ({ page }) => {
+    let release!: () => void;
+    const pending = new Promise<void>((resolve) => { release = resolve; });
+    await page.route("**/_next/image?**", async (route) => {
+      if (!decodeURIComponent(route.request().url()).includes("yaroslav")) return route.continue();
+      await pending;
+      if (outcome === "failed") await route.abort();
+      else await route.continue();
+    });
+    await page.goto("/en", { waitUntil: "domcontentloaded" });
+    await expect(page.locator(".hero-portrait .image-status")).toContainText("Loading portrait");
+    await expect(page.locator(".pill-button")).toBeVisible();
+    await expect(page.locator("h1")).toBeVisible();
+    release();
+    if (outcome === "loaded") {
+      await expect(page.locator(".portrait-image")).toHaveAttribute("data-image-state", "ready");
+      await expect(page.locator(".hero-portrait .image-status")).toHaveCount(0);
+    } else {
+      await expect(page.locator(".hero-portrait .image-status")).toHaveText("Portrait unavailable");
+    }
+  });
+}

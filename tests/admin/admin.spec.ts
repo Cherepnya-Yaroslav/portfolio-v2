@@ -1,5 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 import path from "node:path";
+import sharp from "sharp";
 
 const backend = "http://127.0.0.1:3111";
 
@@ -64,7 +65,7 @@ test("draft, publish, translation, reload, unpublish, and delete lifecycle", asy
   await publicPage.reload();
   await expect(publicPage.locator(".project-card")).toHaveCount(1);
   await expect(publicPage.locator(".project-card h3")).toContainText("Мой проект");
-  await expect(publicPage.locator(".project-count")).toHaveText("(01)");
+  await expect(publicPage.locator(".project-count:visible")).toHaveText("(01)");
   await expect(publicPage.locator(".project-links a")).toHaveAttribute("href", "https://example.com");
   await publicPage.goto("/en#projects");
   await expect(publicPage.locator(".project-description")).toHaveText("I built the frontend and backend for this application.");
@@ -171,4 +172,37 @@ test("concurrent edit does not overwrite a newer saved version", async ({ page, 
   page.once("dialog", (dialog) => dialog.accept());
   await page.locator('.admin-project-list button').filter({ hasText: "Обновить" }).click();
   await expect(page.locator(".admin-project-item")).toContainText("Новая версия");
+});
+
+test("large covers are resized and compressed before storage upload", async ({ page, request }) => {
+  await login(page);
+  await fillProject(page);
+  const original = await sharp({ create: { width: 3200, height: 2000, channels: 3, background: "#7167ff" } }).png().toBuffer();
+  expect(original.length).toBeLessThan(5 * 1024 * 1024);
+  await page.locator('[name="cover"]').setInputFiles({ name: "large.png", mimeType: "image/png", buffer: original });
+  await expect(page.locator(".admin-upload")).toContainText("large.png");
+  const uploaded = page.waitForRequest((request) => request.method() === "POST" && request.url().includes("/storage/v1/object/portfolio-images/"));
+  await page.getByRole("button", { name: "Сохранить черновик" }).click();
+  const upload = await uploaded;
+  expect(upload.url()).toMatch(/\.webp$/);
+  await expect(page.getByRole("status")).toContainText("Черновик сохранён");
+  const state = await (await request.get(`${backend}/__test/state`)).json();
+  const dimensions = state.uploads[0];
+  expect(dimensions).toMatchObject({ width: 1920, height: 1200, type: "image/webp" });
+  expect(dimensions.size).toBeLessThan(original.length);
+  await expect(page.getByRole("status")).toContainText("Черновик сохранён");
+});
+
+test("hero streams while the projects database is still pending", async ({ page, request }) => {
+  await request.post(`${backend}/__test/failures`, { data: { holdReads: true } });
+  try {
+    await page.goto("/en", { waitUntil: "commit" });
+    await expect(page.locator("h1")).toBeVisible();
+    await expect(page.locator(".projects-loading")).toContainText("Loading projects");
+    await expect(page.locator(".portrait-image")).toBeVisible();
+  } finally {
+    await request.post(`${backend}/__test/failures`, { data: {} });
+  }
+  await expect(page.locator(".projects-loading")).toHaveCount(0);
+  await expect(page.getByText("New projects will appear here soon.")).toBeVisible();
 });

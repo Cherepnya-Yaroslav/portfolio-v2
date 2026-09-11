@@ -40,12 +40,37 @@ export async function uploadProjectImage(file: File) {
   if (!file.size || file.size > MAX_IMAGE_BYTES) throw projectError("Размер обложки должен быть от 1 байта до 5 МБ.");
   let bitmap: ImageBitmap;
   try { bitmap = await createImageBitmap(file); } catch { throw projectError("Файл не удалось прочитать как изображение."); }
-  const { width, height } = bitmap;
-  bitmap.close();
-  if (width > 12000 || height > 12000) throw projectError("Размер изображения — не более 12 000 пикселей по каждой стороне.");
-  const extension = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp" }[file.type];
+  let upload: Blob;
+  try {
+    const { width, height } = bitmap;
+    if (width > 12000 || height > 12000 || width * height > 40_000_000) {
+      throw projectError("Размер изображения — не более 12 000 пикселей по стороне и 40 мегапикселей.");
+    }
+    const scale = Math.min(1, 1920 / Math.max(width, height));
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.max(1, Math.round(width * scale));
+    canvas.height = Math.max(1, Math.round(height * scale));
+    const context = canvas.getContext("2d");
+    if (!context) throw projectError("Браузер не смог обработать обложку. Попробуйте другой браузер.");
+    context.imageSmoothingQuality = "high";
+    context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+    try {
+      const optimized = await new Promise<Blob>((resolve, reject) => {
+        canvas.toBlob((blob) => blob ? resolve(blob) : reject(projectError("Не удалось сжать обложку.")), "image/webp", 0.82);
+      });
+      // Keep a smaller original only when it already fits the dimension budget.
+      upload = scale === 1 && file.size <= optimized.size ? file : optimized;
+    } finally {
+      canvas.width = canvas.height = 0;
+    }
+  } finally {
+    bitmap.close();
+  }
+  if (upload.size > MAX_IMAGE_BYTES) throw projectError("После сжатия обложка превышает 5 МБ. Выберите изображение меньшего размера.");
+  const extension = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp" }[upload.type];
+  if (!extension) throw projectError("Браузер вернул неподдерживаемый формат обложки.");
   const path = `projects/${crypto.randomUUID()}.${extension}`;
-  const { error } = await getBrowserSupabase().storage.from(IMAGES_BUCKET).upload(path, file, { contentType: file.type, cacheControl: "31536000", upsert: false });
+  const { error } = await getBrowserSupabase().storage.from(IMAGES_BUCKET).upload(path, upload, { contentType: upload.type, cacheControl: "31536000", upsert: false });
   if (error) throw error;
   return path;
 }

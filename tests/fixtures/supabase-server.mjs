@@ -1,4 +1,5 @@
 import { createServer } from "node:http";
+import sharp from "sharp";
 import { randomUUID } from "node:crypto";
 import { readFileSync } from "node:fs";
 
@@ -7,6 +8,9 @@ const visitorId = "22222222-2222-4222-8222-222222222222";
 const image = readFileSync(new URL("../../public/images/yaroslav.webp", import.meta.url));
 let records = [];
 let files = new Set();
+let uploads = [];
+let holdReads = false;
+let pendingReads = [];
 let failReads = false;
 let failWrites = false;
 
@@ -38,9 +42,9 @@ createServer(async (request, response) => {
   const isAdmin = userId === adminId;
 
   if (url.pathname === "/health") return send(200, { ok: true });
-  if (url.pathname === "/__test/reset") { records = []; files = new Set(); failReads = false; failWrites = false; return send(200, {}); }
-  if (url.pathname === "/__test/state") return send(200, { records, files: [...files] });
-  if (url.pathname === "/__test/failures") { failReads = Boolean(body.reads); failWrites = Boolean(body.writes); return send(200, {}); }
+  if (url.pathname === "/__test/reset") { records = []; files = new Set(); uploads = []; holdReads = false; pendingReads.splice(0).forEach((resolve) => resolve()); failReads = false; failWrites = false; return send(200, {}); }
+  if (url.pathname === "/__test/state") return send(200, { records, files: [...files], uploads });
+  if (url.pathname === "/__test/failures") { holdReads = Boolean(body.holdReads); if (!holdReads) pendingReads.splice(0).forEach((resolve) => resolve()); failReads = Boolean(body.reads); failWrites = Boolean(body.writes); return send(200, {}); }
   if (url.pathname === "/auth/v1/token") {
     if (url.searchParams.get("grant_type") === "refresh_token") return send(200, session(String(body.refresh_token).includes(adminId) ? "admin@example.test" : "visitor@example.test"));
     return body.password === "test-password-only" ? send(200, session(body.email)) : send(400, { code: "invalid_credentials", msg: "Invalid login credentials" });
@@ -51,6 +55,7 @@ createServer(async (request, response) => {
   if (url.pathname === "/rest/v1/portfolio_projects") {
     const matching = (record) => [...url.searchParams].every(([key, value]) => !["id", "visibility", "image_path", "updated_at"].includes(key) || record[key] === value.replace(/^eq\./, ""));
     if (["GET", "HEAD"].includes(request.method)) {
+      if (holdReads && !isAdmin) await new Promise((resolve) => pendingReads.push(resolve));
       if (failReads) return send(503, { message: "Test service unavailable" });
       const data = records.filter((record) => (isAdmin || record.visibility === "published") && matching(record)).sort((a, b) => a.sort_order - b.sort_order || b.created_at.localeCompare(a.created_at) || a.id.localeCompare(b.id));
       response.setHeader("Content-Range", `0-${Math.max(0, data.length - 1)}/${data.length}`);
@@ -79,7 +84,12 @@ createServer(async (request, response) => {
   }
   if (url.pathname.startsWith("/storage/v1/object/portfolio-images")) {
     if (!isAdmin) return send(403, { message: "Forbidden" });
-    if (request.method === "POST") { const path = url.pathname.replace("/storage/v1/object/portfolio-images/", ""); files.add(path); return send(200, { Key: `portfolio-images/${path}`, Id: randomUUID() }); }
+    if (request.method === "POST") { const path = url.pathname.replace("/storage/v1/object/portfolio-images/", ""); files.add(path);
+      const form = await new Response(Buffer.concat(chunks), { headers: { "Content-Type": request.headers["content-type"] } }).formData();
+      const file = [...form.values()].find((value) => typeof value !== "string");
+      const metadata = await sharp(Buffer.from(await file.arrayBuffer())).metadata();
+      uploads.push({ width: metadata.width, height: metadata.height, size: file.size, type: file.type });
+      return send(200, { Key: `portfolio-images/${path}`, Id: randomUUID() }); }
     if (request.method === "DELETE") { for (const path of body.prefixes ?? []) if (!records.some((record) => record.image_path === path)) files.delete(path); return send(200, []); }
   }
   return send(404, { message: "Test endpoint not found" });
