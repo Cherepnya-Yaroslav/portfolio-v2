@@ -291,13 +291,22 @@ a.contact-row:hover .contact-name { color: var(--lavender); }
 
 /* Image readiness comes from load/error events, never a simulated progress timer. */
 .image-status { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 12px; font-size: var(--text-xs); z-index: 1; pointer-events: none; }
-.hero-portrait .image-status { color: var(--lavender); background: radial-gradient(ellipse, #9990ff12, transparent 65%); }
+.image-status-badge { color: var(--lavender); background: radial-gradient(ellipse, #9990ff12, transparent 65%); }
+.image-status-hero { overflow: hidden; color: var(--lavender); background: transparent; }
+.image-status-hero::before { content: ""; position: absolute; left: 50%; bottom: -8%; width: min(60%, 520px); aspect-ratio: .64; border-radius: 52% 52% 18% 18%; transform: translateX(-50%); background: radial-gradient(ellipse at 50% 18%, rgb(166 160 255 / 18%), rgb(98 88 255 / 10%) 35%, rgb(98 88 255 / 4%) 58%, transparent 72%); filter: blur(5px); opacity: .9; animation: portrait-aura 1600ms ease-in-out infinite alternate; }
+.image-status-hero::after { content: ""; position: absolute; left: 16%; right: 16%; bottom: 0; height: 44%; background: linear-gradient(to top, rgb(98 88 255 / 16%), transparent); mask-image: repeating-linear-gradient(90deg, #000 0 1px, transparent 1px 13px); opacity: .45; }
 .image-loader { display: inline-block; font-size: 36px; line-height: 1; animation: image-loading 2.5s linear infinite; }
 .image-status-error { opacity: .8; }
 [data-image-state="error"] { visibility: hidden; }
-.portrait-image[data-image-state="ready"] { animation: portrait-enter 550ms cubic-bezier(.16,1,.3,1) both; }
+.portrait-image { opacity: 0; transform: translate3d(0, 84px, 0) scale(.985); transform-origin: 50% 100%; }
+.portrait-image[data-image-state="ready"] { opacity: 1; animation: portrait-rise 850ms cubic-bezier(.16,1,.3,1) both; }
+.project-preview[data-image-state="loading"] { opacity: 0; }
+.project-preview[data-image-state="ready"] { opacity: 1; }
 .projects-loading { min-height: 620px; display: flex; justify-content: center; align-items: center; gap: 18px; color: var(--lavender); }
 @keyframes image-loading { to { rotate: 360deg; } }
+@keyframes portrait-aura { from { opacity: .55; transform: translateX(-50%) translateY(18px) scale(.94); } to { opacity: .95; transform: translateX(-50%) translateY(0) scale(1); } }
+@keyframes portrait-rise { from { opacity: 0; transform: translate3d(0, 84px, 0) scale(.985); } to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); } }
 @media (prefers-reduced-motion: reduce) {
-  .image-loader, .portrait-image[data-image-state="ready"] { animation: none; }
+  .image-loader, .image-status-hero::before, .portrait-image[data-image-state="ready"] { animation: none; }
+  .portrait-image { transform: none; }
 }
