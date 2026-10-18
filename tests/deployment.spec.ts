@@ -26,6 +26,12 @@ function deploy(scenario: string, command = `deploy ${revision}`) {
   const scripts: Record<string, string> = {
     flock: "exit 0",
     timeout: "shift; exec \"$@\"",
+    df: `echo 'Filesystem 1024-blocks Used Available Capacity Mounted on'
+      if [ "$TEST_SCENARIO" = low-disk ]; then
+        echo 'test 8000000 7000000 1000000 88% /'
+      else
+        echo 'test 8000000 3000000 5000000 38% /'
+      fi`,
     git: `case "$*" in
       *rev-parse*) echo "$TEST_REVISION" ;;
       *archive*) cat "$TEST_ARCHIVE" ;;
@@ -33,7 +39,7 @@ function deploy(scenario: string, command = `deploy ${revision}`) {
     esac`,
     docker: `echo "$*" >> "$TEST_TRACE"
       case "$*" in
-        *" build app") [ "$TEST_SCENARIO" != build ] ;;
+        *" build app") [ "$TEST_SCENARIO" != build ] && [ "$TEST_SCENARIO" != low-disk ] ;;
         "exec -i "*) cat >/dev/null; [ "$TEST_SCENARIO" != candidate ] ;;
         *" ps -q app") echo previous-container ;;
         "inspect "*) echo sha256:previous ;;
@@ -74,6 +80,17 @@ test("deployment SSH entry rejects arbitrary commands", () => {
   try {
     expect(run.result.status).toBe(2);
     expect(run.result.stderr).toContain("Expected: deploy");
+    expect(readFileSync(join(run.app, "version"), "utf8")).toBe("previous");
+  } finally { rmSync(run.directory, { recursive: true, force: true }); }
+});
+
+test("low disk triggers cache cleanup before building and preserves the working site", () => {
+  const run = deploy("low-disk");
+  try {
+    expect(run.result.status).not.toBe(0);
+    const trace = readFileSync(run.trace, "utf8");
+    expect(trace.indexOf("buildx prune --all --force")).toBeGreaterThanOrEqual(0);
+    expect(trace.indexOf("buildx prune --all --force")).toBeLessThan(trace.indexOf("build app"));
     expect(readFileSync(join(run.app, "version"), "utf8")).toBe("previous");
   } finally { rmSync(run.directory, { recursive: true, force: true }); }
 });

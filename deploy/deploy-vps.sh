@@ -46,6 +46,15 @@ sync_sources() {
     --exclude='node_modules' --exclude='.next' "$1/" "$APP_DIR/"
 }
 
+prune_low_disk() {
+  local available_kb
+  available_kb=$(df -Pk "$STATE_DIR" | awk 'NR == 2 { print $4 }')
+  if (( available_kb < 2097152 )); then
+    docker buildx prune --all --force >/dev/null \
+      || echo 'Build cache cleanup will retry next deployment.' >&2
+  fi
+}
+
 cleanup() {
   local result=$?
   trap - EXIT
@@ -63,6 +72,7 @@ cleanup() {
 trap cleanup EXIT
 trap 'exit 130' HUP INT TERM
 
+prune_low_disk
 APP_IMAGE="$image" docker compose --project-name yaroslav-portfolio \
   --project-directory "$release_dir" --env-file "$ENV_FILE" config --quiet
 APP_IMAGE="$image" docker compose --project-name yaroslav-portfolio \
@@ -102,6 +112,5 @@ while read -r tag identifier; do
     docker image rm "$tag" >/dev/null || true
   fi
 done < <(docker image ls --no-trunc --format '{{.Repository}}:{{.Tag}} {{.ID}}')
-docker buildx prune --all --force --reserved-space 128MB --max-used-space 1GB --min-free-space 2GB >/dev/null \
-  || echo 'Build cache cleanup will retry next deployment.' >&2
+prune_low_disk
 echo "Deployed $revision"
