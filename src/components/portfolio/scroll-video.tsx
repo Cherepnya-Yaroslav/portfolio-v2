@@ -108,14 +108,6 @@ export function ScrollVideo({ sceneRef, locale }: ScrollVideoProps) {
             : "Yaroslav opens the laptop as you scroll down and closes it as you scroll up"
         }
       />
-      <div className="pf-video-caption">
-        <span className="pf-video-signal" aria-hidden="true" />
-        <span>
-          {locale === "ru"
-            ? "Всё начинается с ноутбука"
-            : "It all starts with a laptop"}
-        </span>
-      </div>
       <div className="pf-video-progress" ref={progressRef} aria-hidden="true">
         <span />
       </div>

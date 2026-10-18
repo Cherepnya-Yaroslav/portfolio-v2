@@ -177,23 +177,6 @@
   height: 100%;
   object-fit: contain;
 }
-.pf-video-caption {
-  position: absolute;
-  bottom: 55px;
-  left: 22px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #e6e6df;
-  font-size: 10px;
-  letter-spacing: 0.02em;
-}
-.pf-video-signal {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--pf-accent);
-}
 .pf-video-progress {
   position: absolute;
   bottom: 0;
@@ -983,9 +966,6 @@
   }
   .pf-pixel-console .pf-video {
     object-position: center;
-  }
-  .pf-pixel-console .pf-video-caption {
-    display: none;
   }
   .pf-pixel-console .pf-scroll-note {
     left: 8px;
