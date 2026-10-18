@@ -1,8 +1,8 @@
 import { expect, test } from "@playwright/test";
 
 for (const locale of ["ru", "en"]) {
-  for (const width of [360, 390, 768, 1440, 1920]) {
-    test(`${locale}: responsive layout at ${width}px`, async ({ page }) => {
+  for (const width of [360, 390, 659, 768, 1440, 1920]) {
+    test(`${locale}: pixel portfolio fits ${width}px`, async ({ page }) => {
       const errors: string[] = [];
       page.on("pageerror", (error) => errors.push(error.message));
       await page.setViewportSize({ width, height: 1000 });
@@ -10,154 +10,175 @@ for (const locale of ["ru", "en"]) {
       await page.evaluate(() => document.fonts.ready);
       await expect(page.locator("html")).toHaveAttribute("lang", locale);
       await expect(page.locator("h1")).toHaveCount(1);
-      await expect(page.locator(".portrait-image")).toBeVisible();
+      await expect(page.locator("video")).toBeVisible();
+      await expect(page.locator(".pf-pixel-identity")).toContainText(
+        locale === "ru" ? "AI-разработчик" : "AI developer",
+      );
       const dimensions = await page.evaluate(() => {
-        const heading = document.querySelector("h1")!;
         const range = document.createRange();
-        range.selectNodeContents(heading);
-        const textRect = range.getBoundingClientRect();
-        return { viewport: innerWidth, document: document.documentElement.scrollWidth, titleRight: textRect.right, titleLeft: textRect.left };
+        range.selectNodeContents(document.querySelector("h1")!);
+        const rect = range.getBoundingClientRect();
+        return {
+          width: document.documentElement.scrollWidth,
+          left: rect.left,
+          right: rect.right,
+        };
       });
-      expect(dimensions.document).toBeLessThanOrEqual(width);
-      expect(dimensions.titleRight).toBeLessThanOrEqual(width);
-      expect(dimensions.titleLeft).toBeGreaterThanOrEqual(0);
-      await expect(page.locator(".project-card").first()).toBeVisible();
-      await page.locator(".project-visual").first().scrollIntoViewIfNeeded();
-      await expect.poll(() => page.locator(".project-preview").first().evaluate((image: HTMLImageElement) => image.complete && image.naturalWidth > 0)).toBe(true);
-      await page.locator("#contact").scrollIntoViewIfNeeded();
-      await expect(page.locator(".contact-row")).toHaveCount(3);
+      expect(dimensions.width).toBeLessThanOrEqual(width);
+      expect(dimensions.left).toBeGreaterThanOrEqual(0);
+      expect(dimensions.right).toBeLessThanOrEqual(width);
+      await page.locator("#about").scrollIntoViewIfNeeded();
+      await expect(page.locator(".pf-service h3")).toHaveText([
+        "Frontend",
+        "Backend",
+        "AI",
+      ]);
+      await page.locator("#contact:visible").scrollIntoViewIfNeeded();
+      await expect(page.locator(".pf-contact-list > a[href]")).toHaveCount(3);
       expect(errors).toEqual([]);
     });
   }
 }
 
-test("root redirect, metadata, and unsupported locale", async ({ page }) => {
+test("main route uses AI metadata and retires prototype URLs", async ({
+  page,
+}) => {
   await page.goto("/");
   await expect(page).toHaveURL(/\/ru$/);
-  await expect(page).toHaveTitle(/Ярослав/);
-  await expect(page.locator('link[rel="alternate"][hreflang="en"]')).toHaveAttribute("href", "/en");
+  await expect(page).toHaveTitle("Ярослав Черепня — AI-разработчик");
+  await expect(
+    page.locator('link[rel="alternate"][hreflang="en"]'),
+  ).toHaveAttribute("href", /\/en$/);
+  await page.goto("/ru/prototypes?variant=pixel");
+  await expect(page).toHaveURL(/\/ru$/);
+  await expect(page.locator(".pv-switcher")).toHaveCount(0);
   const response = await page.goto("/de");
   expect(response?.status()).toBe(404);
 });
 
-test("carousel arrows, keyboard boundaries, and resize preserve position", async ({ page }) => {
-  await page.setViewportSize({ width: 1440, height: 1000 });
-  await page.goto("/en");
-  const previous = page.getByRole("button", { name: "Previous project" });
-  const next = page.getByRole("button", { name: "Next project" });
-  const counter = page.locator(".slide-counter");
-  const track = page.locator(".project-track");
-  const total = await page.locator(".project-card").count();
-  test.skip(total < 2, "Carousel navigation needs at least two published projects.");
-  await expect(previous).toBeDisabled();
-  await next.click();
-  await expect(counter).toContainText(`02 / ${String(total).padStart(2, "0")}`);
-  await track.focus();
-  await page.keyboard.press("End");
-  await expect(counter).toContainText(`${String(total).padStart(2, "0")} / ${String(total).padStart(2, "0")}`);
-  await page.setViewportSize({ width: 390, height: 844 });
-  await expect(counter).toContainText(`${String(total).padStart(2, "0")} / ${String(total).padStart(2, "0")}`);
-  await expect.poll(async () => track.evaluate((element) => Math.abs(element.children[element.children.length - 1].getBoundingClientRect().left - element.getBoundingClientRect().left))).toBeLessThan(3);
-  await page.keyboard.press("Home");
-  await expect(counter).toContainText(`01 / ${String(total).padStart(2, "0")}`);
-  await page.keyboard.press("ArrowRight");
-  await expect(counter).toContainText(`02 / ${String(total).padStart(2, "0")}`);
-  await page.keyboard.press("End");
-  await expect(next).toBeDisabled();
-  await page.keyboard.press("ArrowLeft");
-  await expect(counter).toContainText(`${String(total - 1).padStart(2, "0")} / ${String(total).padStart(2, "0")}`);
-});
-
-test("language switching preserves visible section in both directions", async ({ page }) => {
+test("outcome-focused copy and separate AI technology group", async ({
+  page,
+}) => {
   await page.goto("/ru");
-  await page.locator('.main-nav a[href="#projects"]').click();
-  await page.locator(".language-switch a[lang=en]").evaluate((element: HTMLAnchorElement) => element.click());
-  await expect(page).toHaveURL(/\/en#projects$/);
-  await expect(page.locator("html")).toHaveAttribute("lang", "en");
-  await expect(page).toHaveTitle(/Yaroslav/);
-  await expect.poll(() => page.locator("#projects").evaluate((element) => Math.abs(element.getBoundingClientRect().top))).toBeLessThan(100);
-  await page.locator("#contact").scrollIntoViewIfNeeded();
-  await page.locator(".language-switch a[lang=ru]").evaluate((element: HTMLAnchorElement) => element.click());
-  await expect(page).toHaveURL(/\/ru#contact$/);
-  await expect(page.locator("html")).toHaveAttribute("lang", "ru");
+  await expect(page.locator("h1")).toContainText("ОТ ИДЕИ");
+  await expect(page.locator("h1")).toContainText("ПРОДУКТА");
+  await expect(page.locator(".pf-hero-description")).toContainText(
+    "Собираю веб-продукты, делаю сервисы, интегрирую AI",
+  );
+  await expect(
+    page
+      .locator("#hero")
+      .getByText(/пишет код|человеческого упорства|Fullstack/i),
+  ).toHaveCount(0);
+  const ai = page
+    .locator(".pf-service")
+    .filter({ has: page.getByRole("heading", { name: "AI", exact: true }) });
+  for (const name of ["Codex", "Higgsfield", "RAG", "MCP", "Skills"]) {
+    await expect(
+      ai.getByRole("listitem").filter({ hasText: new RegExp(`^${name}$`) }),
+    ).toHaveCount(1);
+  }
 });
 
-test("production content, anchors work, and reduced motion is respected", async ({ page }) => {
+test("navigation, skip link, contact links and return to top", async ({
+  page,
+}) => {
   await page.goto("/ru");
   await page.keyboard.press("Tab");
   await expect(page.locator(".skip-link")).toBeFocused();
   await page.keyboard.press("Enter");
-  await page.locator(".pill-button").click();
+  await page
+    .getByRole("link", { name: "СМОТРЕТЬ ПРОЕКТЫ", exact: true })
+    .click();
   await expect(page).toHaveURL(/#projects$/);
-  await expect(page.getByText(/Демо|заглуш|появится позже|Предварительное|Пример стека/i)).toHaveCount(0);
-  await expect(page.locator(".contact-row[href]")).toHaveCount(3);
-  await expect(page.locator('a[href="#"], a[href=""], button:not([aria-label])')).toHaveCount(0);
-  const animation = await page.locator("h1").evaluate((element) => getComputedStyle(element).animationName);
-  expect(animation).toBe("none");
-  await page.locator(".back-top").click();
+  await page.locator("#contact:visible").scrollIntoViewIfNeeded();
+  await expect(page.getByRole("link", { name: /Telegram/ })).toHaveAttribute(
+    "href",
+    "https://t.me/itstancpol",
+  );
+  await expect(page.getByRole("link", { name: /Email/ })).toHaveAttribute(
+    "href",
+    "mailto:cherepnyayar@gmail.com",
+  );
+  await page.getByRole("link", { name: "Наверх", exact: true }).click();
   await expect(page).toHaveURL(/#hero$/);
 });
 
-test("mobile touch gesture advances carousel", async ({ browser }) => {
-  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, reducedMotion: "reduce" });
-  const page = await context.newPage();
-  await page.goto("http://127.0.0.1:3100/en#projects");
-  const total = await page.locator(".project-card").count();
-  test.skip(total < 2, "Touch gesture needs at least two published projects.");
-  await page.locator(".project-visual").first().scrollIntoViewIfNeeded();
-  const rect = await page.locator(".project-visual").first().boundingBox();
-  const client = await context.newCDPSession(page);
-  const y = rect!.y + rect!.height / 2;
-  await client.send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: [{ x: 340, y }] });
-  for (let x = 320; x >= 60; x -= 20) {
-    await client.send("Input.dispatchTouchEvent", { type: "touchMove", touchPoints: [{ x, y }] });
-  }
-  await client.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
-  await expect(page.locator(".slide-counter")).toContainText(`02 / ${String(total).padStart(2, "0")}`);
-  await context.close();
+test("language links retain the visible section", async ({ page }) => {
+  await page.goto("/ru#projects");
+  await page
+    .locator(".pf-language:visible")
+    .evaluate((element: HTMLAnchorElement) => element.click());
+  await expect(page).toHaveURL(/\/en#projects$/);
+  await expect(page).toHaveTitle("Yaroslav Cherepnya — AI Developer");
+  await expect
+    .poll(() =>
+      page
+        .locator("#projects:visible")
+        .evaluate((element) => Math.abs(element.getBoundingClientRect().top)),
+    )
+    .toBeLessThan(100);
+  await page.locator("#contact:visible").scrollIntoViewIfNeeded();
+  await page
+    .locator(".pf-language:visible")
+    .evaluate((element: HTMLAnchorElement) => element.click());
+  await expect(page).toHaveURL(/\/ru#contact$/);
 });
 
-test("screenshots and full motion have no runtime errors", async ({ page }, testInfo) => {
-  const errors: string[] = [];
-  page.on("pageerror", (error) => errors.push(error.message));
+test("video scrubs forward, reverses, and respects reduced motion", async ({
+  page,
+}) => {
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto("/ru");
-  await page.evaluate(() => document.fonts.ready);
-  await page.waitForFunction(() => document.getAnimations().filter((animation) => animation.playState === "running" && animation.effect?.getTiming().iterations !== Infinity).length === 0);
-  await page.mouse.move(800, 500);
-  await expect.poll(() => page.locator(".portrait-parallax").evaluate((element) => element.style.transform)).toContain("translate3d");
-  await page.screenshot({ path: testInfo.outputPath("desktop-hero.png") });
+  const video = page.locator("video");
+  await expect
+    .poll(() =>
+      video.evaluate((element: HTMLVideoElement) => element.readyState),
+    )
+    .toBeGreaterThanOrEqual(2);
+  await page.evaluate(() => window.scrollTo({ top: 550, behavior: "instant" }));
+  await expect
+    .poll(() =>
+      video.evaluate((element: HTMLVideoElement) => element.currentTime),
+    )
+    .toBeGreaterThan(2.5);
+  await expect
+    .poll(() =>
+      page
+        .locator(".pf-scene-sticky")
+        .evaluate((element) => element.getBoundingClientRect().top),
+    )
+    .toBe(0);
+  await page.evaluate(() => window.scrollTo({ top: 100, behavior: "instant" }));
+  await expect
+    .poll(() =>
+      video.evaluate((element: HTMLVideoElement) => element.currentTime),
+    )
+    .toBeLessThan(1);
   await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.locator(".project-visual").first().scrollIntoViewIfNeeded();
-  await expect.poll(() => page.locator(".project-preview").first().evaluate((image: HTMLImageElement) => image.complete && image.naturalWidth > 0)).toBe(true);
-  await page.locator("#hero").scrollIntoViewIfNeeded();
-  await page.screenshot({ path: testInfo.outputPath("desktop-full.png"), fullPage: true });
-  await page.setViewportSize({ width: 390, height: 844 });
-  await page.screenshot({ path: testInfo.outputPath("mobile-full.png"), fullPage: true });
-  expect(errors).toEqual([]);
+  await expect
+    .poll(() =>
+      video.evaluate((element: HTMLVideoElement) => element.currentTime),
+    )
+    .toBe(3.75);
+  await page.evaluate(() => window.scrollTo({ top: 600, behavior: "instant" }));
+  await expect(video).toHaveJSProperty("currentTime", 3.75);
 });
 
-for (const outcome of ["loaded", "failed"] as const) {
-  test(`portrait loading ends on ${outcome} without blocking navigation`, async ({ page }) => {
-    let release!: () => void;
-    const pending = new Promise<void>((resolve) => { release = resolve; });
-    await page.route("**/_next/image?**", async (route) => {
-      if (!decodeURIComponent(route.request().url()).includes("yaroslav")) return route.continue();
-      await pending;
-      if (outcome === "failed") await route.abort();
-      else await route.continue();
-    });
-    await page.goto("/en", { waitUntil: "domcontentloaded" });
-    await expect(page.locator(".hero-portrait .image-status")).toContainText("Loading portrait");
-    await expect(page.locator(".pill-button")).toBeVisible();
-    await expect(page.locator("h1")).toBeVisible();
-    release();
-    if (outcome === "loaded") {
-      await expect(page.locator(".portrait-image")).toHaveAttribute("data-image-state", "ready");
-      await expect(page.locator(".hero-portrait .image-status")).toHaveCount(0);
-    } else {
-      await expect(page.locator(".hero-portrait .image-status")).toHaveText("Portrait unavailable");
-    }
-  });
-}
+test("video failure keeps the page and contact navigation usable", async ({
+  page,
+}) => {
+  await page.route("**/video/laptop-scroll.mp4", (route) => route.abort());
+  await page.goto("/en");
+  await expect(page.locator(".pf-video-status")).toContainText(
+    "Video unavailable",
+  );
+  await expect(page.locator("h1")).toBeVisible();
+  await page
+    .getByRole("link", { name: "EXPLORE PROJECTS", exact: true })
+    .click();
+  await expect(page).toHaveURL(/#projects$/);
+  await page.locator("#contact:visible").scrollIntoViewIfNeeded();
+  await expect(page.locator(".pf-contact-list a")).toHaveCount(3);
+});

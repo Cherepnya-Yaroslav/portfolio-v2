@@ -57,7 +57,7 @@ export function ProjectCarousel({ projects, locale, text }: { projects: Project[
           <div className="project-visual">
             <div className="project-visual-top"><span className="concept-badge"><span className="tiny-dot" />{project.status === "wip" ? (locale === "ru" ? "В разработке" : "In progress") : details.category}</span><span className="project-index">{String(index + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}</span></div>
             <LoadingImage key={project.preview} src={project.preview} loadingLabel={locale === "ru" ? "Загружаем обложку" : "Loading preview"} errorLabel={locale === "ru" ? "Обложка недоступна" : "Preview unavailable"} alt={details.alt} width={1100} height={640} className="project-preview" sizes="(max-width: 700px) 88vw, 75vw" />
-            <span className="concept-caption">{text.concept}</span>
+            <span className="concept-caption">{project.demo ? text.demo : text.concept}</span>
           </div>
           <div className="project-details">
             <div className="project-title-row"><div><p className="project-category">{details.category}</p><h3>{project.name}<span>.</span></h3></div><span className="project-corner-arrow"><ArrowIcon /></span></div>

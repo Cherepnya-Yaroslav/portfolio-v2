@@ -7,8 +7,8 @@ export const isLocale = (value: string): value is Locale => locales.some((locale
 export const profile = {
   name: { ru: "Ярослав", en: "Yaroslav" },
   portrait,
-  frontendTechnologies: ["JavaScript", "TypeScript", "React.js", "Redux", "Material UI", "HTML", "CSS", "Sass"],
-  fullstackTechnologies: ["Node.js", "REST API", "Strapi", "Headless CMS", "Nginx", "Docker", "GitHub Actions", "VPS", "Telegram Web Apps"],
+  frontendTechnologies: ["TypeScript", "React", "Next.js", "Tailwind CSS", "HTML", "CSS", "Figma"],
+  fullstackTechnologies: ["Python", "FastAPI", "Node.js", "PostgreSQL", "SQLAlchemy", "Redis", "RabbitMQ", "Docker", "CI/CD", "OpenAI / RAG"],
 };
 
 export type Contact = {
@@ -39,7 +39,7 @@ export type Project = {
 
 export const projects: Project[] = [
   {
-    id: "forma", name: "forma", preview: "/projects/forma.svg", theme: "store", demo: false,
+    id: "forma", name: "forma", preview: "/projects/forma.svg", theme: "store", demo: true,
     technologies: ["React", "TypeScript", "CSS", "Responsive UI"],
     text: {
       ru: { category: "E-commerce", description: "Адаптивный интерфейс интернет-магазина с понятной структурой каталога, быстрым сценарием выбора товара и аккуратной подготовкой UI к интеграции с backend.", role: "Frontend-разработка", alt: "Интерфейс интернет-магазина forma: каталог предметов интерьера в оливковых и кремовых тонах" },
@@ -47,7 +47,7 @@ export const projects: Project[] = [
     },
   },
   {
-    id: "pulse", name: "pulse", preview: "/projects/pulse.svg", theme: "analytics", demo: false,
+    id: "pulse", name: "pulse", preview: "/projects/pulse.svg", theme: "analytics", demo: true,
     technologies: ["React", "TypeScript", "REST API", "Redux"],
     text: {
       ru: { category: "Аналитический кабинет", description: "Интерфейс кабинета для работы с данными: состояния загрузки, графики, фильтры и компоненты, которые помогают быстро считывать ключевые показатели.", role: "Frontend · архитектура интерфейса", alt: "Интерфейс pulse: тёмная аналитическая панель с сиреневыми графиками" },
@@ -55,7 +55,7 @@ export const projects: Project[] = [
     },
   },
   {
-    id: "spot", name: "spot", preview: "/projects/spot.svg", theme: "booking", demo: false,
+    id: "spot", name: "spot", preview: "/projects/spot.svg", theme: "booking", demo: true,
     technologies: ["React", "Node.js", "REST API", "Nginx"],
     text: {
       ru: { category: "Сервис бронирования", description: "Веб-приложение со сценарием поиска, выбора времени и бронирования. Акцент на предсказуемой навигации, адаптивности и готовности к серверной интеграции.", role: "Fullstack-разработка", alt: "Интерфейс spot: светлый сервис бронирования с календарём и карточкой пространства" },
@@ -66,22 +66,22 @@ export const projects: Project[] = [
 
 export const copy = {
   ru: {
-    meta: { title: "Ярослав Черепня — Frontend-разработчик", description: "Портфолио frontend-разработчика Ярослава Черепни: React, TypeScript, Redux, интеграции с API и CMS, production-ready интерфейсы." },
+    meta: { title: "Ярослав Черепня — Fullstack-разработчик", description: "Fullstack-разработчик: React, TypeScript, Next.js, Python, FastAPI, PostgreSQL и запуск веб-продуктов в production." },
     nav: { about: "Обо мне", projects: "Проекты", contact: "Контакты" },
-    skip: "Перейти к содержимому", language: "Язык сайта", portfolio: "ПОРТФОЛИО / 2026", developer: "Frontend-разработчик · React / TypeScript",
-    hero: { intro: "Производительные интерфейсы", ending: "для веб-продуктов.", description: "Разрабатываю frontend на React и TypeScript, интегрирую его с API и CMS, довожу продукт до стабильного production-запуска.", cta: "Смотреть проекты", scroll: "Опыт, стек и проекты ниже", alt: "Ярослав протягивает открытый ноутбук к зрителю", side: "REACT И TYPESCRIPT.\nPRODUCTION-ПОДХОД." },
-    about: { eyebrow: "ОБО МНЕ", start: "Frontend-разработчик", middle: "с более чем 1.5 годами коммерческого опыта.", highlight: "Специализируюсь на React.js и TypeScript.", end: "Работал с полным циклом разработки: архитектура frontend-приложений, интеграции с backend и CMS, адаптивные интерфейсы, деплой на VPS и поддержка после релиза.", frontend: "Frontend для продуктовых команд.", frontendBody: "React.js, TypeScript, Redux, Material UI, HTML, CSS и Sass. Делаю адаптивные интерфейсы, pixel-perfect верстку по Figma и интерактивные компоненты: формы, календари, динамические блоки.", fullstack: "Интеграции и запуск в production.", fullstackBody: "Node.js, REST API, Strapi, headless CMS, Telegram Web Apps, Nginx, Docker, VPS и GitHub Actions. Могу связать frontend с данными, настроить окружение и довести релиз до работающего сервера." },
-    work: { eyebrow: "ПРОЕКТЫ И ОПЫТ", title: "Работы", accent: "и кейсы", note: "Коммерческие задачи, продуктовые интерфейсы\nи собственные веб-проекты.", demo: "Проект", concept: "Интерфейс проекта", role: "Моя роль", pending: "", website: "Открыть сайт", repository: "Смотреть код", previous: "Предыдущий проект", next: "Следующий проект", carousel: "Карусель проектов", slide: "Проект", of: "из", hint: "Листайте, чтобы увидеть больше" },
-    footer: { eyebrow: "ОТКРЫТ К ПРЕДЛОЖЕНИЯМ", line1: "Ищу сильную", line2: "frontend-команду.", description: "Готов обсудить позицию frontend-разработчика, продуктовую команду или проект с React и TypeScript.", top: "Наверх", signature: "React · TypeScript · Redux" },
+    skip: "Перейти к содержимому", language: "Язык сайта", portfolio: "ПОРТФОЛИО / 2026", developer: "Fullstack-разработчик · React / Python",
+    hero: { intro: "Веб-продукты", ending: "от интерфейса до production.", description: "Разрабатываю frontend на React, TypeScript и Next.js, backend на Python/FastAPI и Node.js, проектирую API и схемы данных.", cta: "Смотреть проекты", scroll: "Опыт, стек и проекты ниже", alt: "Ярослав протягивает открытый ноутбук к зрителю", side: "FRONTEND И BACKEND.\nPRODUCTION-ПОДХОД." },
+    about: { eyebrow: "ОБО МНЕ", start: "Fullstack-разработчик.", middle: "Работаю с полным циклом веб-разработки:", highlight: "от интерфейса до API и базы данных.", end: "Запускаю продукты в production, интегрирую внешние и AI-сервисы, настраиваю инфраструктуру и CI/CD.", frontend: "Интерфейсы для веб-продуктов.", frontendBody: "React, TypeScript и Next.js. Делаю адаптивные интерфейсы по Figma, продумываю состояния и подключаю их к REST API.", fullstack: "Backend, данные и production.", fullstackBody: "Python, FastAPI, Node.js и PostgreSQL. Проектирую API, интеграции и фоновые задачи, работаю с Redis, RabbitMQ, Docker и CI/CD." },
+    work: { eyebrow: "ПРОЕКТЫ И ОПЫТ", title: "Работы", accent: "и кейсы", note: "Коммерческие задачи, продуктовые интерфейсы\nи собственные веб-проекты.", demoNote: "Магазин, аналитика и бронирование.\nДемонстрационные концепты интерфейсов.", demo: "Демонстрационный кейс", concept: "Интерфейс проекта", role: "Моя роль", pending: "", website: "Открыть сайт", repository: "Смотреть код", previous: "Предыдущий проект", next: "Следующий проект", carousel: "Карусель проектов", slide: "Проект", of: "из", hint: "Листайте, чтобы увидеть больше" },
+    footer: { eyebrow: "ОТКРЫТ К ПРЕДЛОЖЕНИЯМ", line1: "Ищу сильную", line2: "продуктовую команду.", description: "Готов обсудить работу в команде или веб-проект с React, Python и современной инфраструктурой.", top: "Наверх", signature: "React · Python · PostgreSQL" },
   },
   en: {
-    meta: { title: "Yaroslav Cherepnya — Frontend Developer", description: "Frontend developer portfolio by Yaroslav Cherepnya: React, TypeScript, Redux, API and CMS integrations, production-ready interfaces." },
+    meta: { title: "Yaroslav Cherepnya — Fullstack Developer", description: "Fullstack developer working with React, TypeScript, Next.js, Python, FastAPI and PostgreSQL to ship web products to production." },
     nav: { about: "About", projects: "Projects", contact: "Contact" },
-    skip: "Skip to content", language: "Website language", portfolio: "PORTFOLIO / 2026", developer: "Frontend Developer · React / TypeScript",
-    hero: { intro: "Production-ready interfaces", ending: "for web products.", description: "I build frontend with React and TypeScript, integrate it with APIs and CMS platforms, and bring products to stable production releases.", cta: "Explore projects", scroll: "Experience, stack and projects below", alt: "Yaroslav holding an open laptop towards the viewer", side: "REACT AND TYPESCRIPT.\nPRODUCTION MINDSET." },
-    about: { eyebrow: "ABOUT ME", start: "Frontend developer", middle: "with 1.5+ years of commercial experience.", highlight: "Focused on React.js and TypeScript.", end: "I have worked across the full development cycle: frontend architecture, backend and CMS integrations, responsive interfaces, VPS deployment and post-release support.", frontend: "Frontend for product teams.", frontendBody: "JavaScript, TypeScript, React.js, Redux, Material UI, HTML, CSS and Sass. I build responsive interfaces, pixel-perfect layouts from Figma and interactive UI components: forms, calendars and dynamic blocks.", fullstack: "Integrations and production launch.", fullstackBody: "Node.js, REST API, Strapi, headless CMS, Telegram Web Apps, Nginx, Docker, VPS and GitHub Actions. I can connect frontend to data, configure the environment and bring a release to a working server." },
-    work: { eyebrow: "PROJECTS AND EXPERIENCE", title: "Work", accent: "and cases", note: "Commercial tasks, product interfaces\nand personal web projects.", demo: "Project", concept: "Project interface", role: "My role", pending: "", website: "Visit website", repository: "View code", previous: "Previous project", next: "Next project", carousel: "Project carousel", slide: "Project", of: "of", hint: "Scroll to discover more" },
-    footer: { eyebrow: "OPEN TO OPPORTUNITIES", line1: "Looking for a strong", line2: "frontend team.", description: "Ready to discuss a frontend developer role, a product team or a React and TypeScript project.", top: "Back to top", signature: "React · TypeScript · Redux" },
+    skip: "Skip to content", language: "Website language", portfolio: "PORTFOLIO / 2026", developer: "Fullstack Developer · React / Python",
+    hero: { intro: "Web products", ending: "from interface to production.", description: "I build frontend with React, TypeScript and Next.js, backend with Python/FastAPI and Node.js, and design APIs and data models.", cta: "Explore projects", scroll: "Experience, stack and projects below", alt: "Yaroslav holding an open laptop towards the viewer", side: "FRONTEND AND BACKEND.\nPRODUCTION MINDSET." },
+    about: { eyebrow: "ABOUT ME", start: "Fullstack developer.", middle: "I work across the full web development cycle:", highlight: "from interface to API and database.", end: "I ship products to production, integrate external and AI services, and configure infrastructure and CI/CD.", frontend: "Interfaces for web products.", frontendBody: "React, TypeScript and Next.js. I build responsive interfaces from Figma, design clear UI states and connect them to REST APIs.", fullstack: "Backend, data and production.", fullstackBody: "Python, FastAPI, Node.js and PostgreSQL. I design APIs, integrations and background jobs, and work with Redis, RabbitMQ, Docker and CI/CD." },
+    work: { eyebrow: "PROJECTS AND EXPERIENCE", title: "Work", accent: "and cases", note: "Commercial tasks, product interfaces\nand personal web projects.", demoNote: "Commerce, analytics and booking.\nDemonstration interface concepts.", demo: "Demo case", concept: "Project interface", role: "My role", pending: "", website: "Visit website", repository: "View code", previous: "Previous project", next: "Next project", carousel: "Project carousel", slide: "Project", of: "of", hint: "Scroll to discover more" },
+    footer: { eyebrow: "OPEN TO OPPORTUNITIES", line1: "Looking for a strong", line2: "product team.", description: "Open to joining a team or discussing a web project involving React, Python and modern infrastructure.", top: "Back to top", signature: "React · Python · PostgreSQL" },
   },
 } satisfies Record<Locale, unknown>;
 

@@ -1,0 +1,195 @@
+import Image from "next/image";
+import { ArrowIcon, Asterisk } from "@/components/icons";
+import { contacts, copy, profile, type Locale } from "@/content/portfolio";
+import { getPublishedProjects } from "@/lib/projects/public";
+import { ProjectsRetry } from "@/components/projects-retry";
+
+export function ProjectsLoading({ locale }: { locale: Locale }) {
+  return (
+    <section className="pf-projects pf-section" id="projects" aria-busy="true">
+      <h2>{copy[locale].work.title}</h2>
+      <p role="status">
+        {locale === "ru" ? "Загружаем проекты…" : "Loading projects…"}
+      </p>
+    </section>
+  );
+}
+
+export async function Projects({ locale }: { locale: Locale }) {
+  const result = await getPublishedProjects();
+  const ru = locale === "ru";
+  return (
+    <section
+      className="pf-projects pf-section"
+      id="projects"
+      aria-labelledby="pf-projects-title"
+    >
+      <div className="pf-section-heading">
+        <h2 id="pf-projects-title">
+          {ru ? (
+            <>
+              Меньше слов.
+              <br />
+              <span>Больше дела.</span>
+            </>
+          ) : (
+            <>
+              Less talk.
+              <br />
+              <span>More making.</span>
+            </>
+          )}
+        </h2>
+        <p>
+          {result.source === "demo"
+            ? ru
+              ? "Концепты интерфейсов. Демонстрационные концепты веб-продуктов."
+              : "Interface concepts. Different challenges, the same attention to detail."
+            : ru
+              ? "Избранные проекты. От интерфейса до работающей системы."
+              : "Selected projects. From interface to working system."}
+        </p>
+      </div>
+      {result.projects.length ? (
+        <div className="pf-project-list">
+          {result.projects.map((project, index) => (
+            <article className="pf-project" key={project.id}>
+              <div className="pf-project-image">
+                <Image
+                  src={project.preview}
+                  alt={project.text[locale].alt}
+                  width={1200}
+                  height={800}
+                  sizes="(max-width: 700px) 90vw, 65vw"
+                />
+                <span className="pf-project-index">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+              </div>
+              <div className="pf-project-info">
+                <div className="pf-project-title">
+                  <h3>
+                    {project.name}
+                    <span>.</span>
+                  </h3>
+                  {project.demo && (
+                    <span className="pf-demo-label">
+                      {ru ? "Концепт" : "Concept"}
+                    </span>
+                  )}
+                </div>
+                <p className="pf-project-category">
+                  {project.text[locale].category}
+                </p>
+                <p className="pf-project-description">
+                  {project.text[locale].description}
+                </p>
+                <p className="pf-project-role">
+                  <span>{ru ? "Моя роль" : "My role"}</span>
+                  {project.text[locale].role}
+                </p>
+                <ul className="pf-tech-list">
+                  {project.technologies.map((technology) => (
+                    <li key={technology}>{technology}</li>
+                  ))}
+                </ul>
+                <div className="pf-project-links">
+                  {project.website && (
+                    <a
+                      href={project.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {ru ? "Открыть проект" : "View project"}
+                      <ArrowIcon />
+                    </a>
+                  )}
+                  {project.repository && (
+                    <a
+                      href={project.repository}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      GitHub
+                      <ArrowIcon />
+                    </a>
+                  )}
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      ) : (
+        <div className="pf-project-empty">
+          <p>
+            {result.source === "error"
+              ? ru
+                ? "Не удалось загрузить проекты. Попробуйте ещё раз."
+                : "Projects could not be loaded. Please try again."
+              : ru
+                ? "Новые проекты скоро появятся здесь."
+                : "New projects will appear here soon."}
+          </p>
+          {result.source === "error" && <ProjectsRetry locale={locale} />}
+        </div>
+      )}
+    </section>
+  );
+}
+
+export function Contact({ locale }: { locale: Locale }) {
+  const ru = locale === "ru";
+  return (
+    <footer
+      className="pf-contact pf-section"
+      id="contact"
+      aria-labelledby="pf-contact-title"
+    >
+      <div className="pf-contact-heading">
+        <h2 id="pf-contact-title">
+          {ru ? (
+            <>
+              Есть идея?
+              <br />
+              <span>Давайте соберём.</span>
+            </>
+          ) : (
+            <>
+              Have an idea?
+              <br />
+              <span>Let’s build it.</span>
+            </>
+          )}
+        </h2>
+        <Asterisk />
+      </div>
+      <p>
+        {ru
+          ? "Расскажите, что вы задумали. Начнём с разговора."
+          : "Tell me what you have in mind. Let’s start with a conversation."}
+      </p>
+      <div className="pf-contact-list">
+        {contacts.map((contact) => (
+          <a
+            key={contact.kind}
+            href={contact.href}
+            target={contact.kind === "email" ? undefined : "_blank"}
+            rel={contact.kind === "email" ? undefined : "noopener noreferrer"}
+          >
+            <span>{contact.label}</span>
+            <span>{contact.value}</span>
+            <ArrowIcon />
+          </a>
+        ))}
+      </div>
+      <div className="pf-footer-bottom">
+        <span>© 2026 {profile.name[locale]}</span>
+        <span>AI. Products. Solutions.</span>
+        <a href="#hero">
+          {copy[locale].footer.top}
+          <ArrowIcon direction="up" />
+        </a>
+      </div>
+    </footer>
+  );
+}

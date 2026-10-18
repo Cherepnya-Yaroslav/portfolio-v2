@@ -49,7 +49,7 @@ test("draft, publish, translation, reload, unpublish, and delete lifecycle", asy
   await expect(page.getByRole("status")).toContainText("Черновик сохранён");
   const publicPage = await context.newPage();
   await publicPage.goto("/ru#projects");
-  await expect(publicPage.locator(".project-card")).toHaveCount(0);
+  await expect(publicPage.locator(".pf-project")).toHaveCount(0);
   await expect(publicPage.getByText("Новые проекты скоро появятся здесь.")).toBeVisible();
 
   await fillProject(page);
@@ -63,13 +63,12 @@ test("draft, publish, translation, reload, unpublish, and delete lifecycle", asy
   await page.getByRole("button", { name: "Сохранить и опубликовать" }).click();
   await expect(page.getByRole("status")).toContainText("сохранён и опубликован");
   await publicPage.reload();
-  await expect(publicPage.locator(".project-card")).toHaveCount(1);
-  await expect(publicPage.locator(".project-card h3")).toContainText("Мой проект");
-  await expect(publicPage.locator(".project-count:visible")).toHaveText("(01)");
-  await expect(publicPage.locator(".project-links a")).toHaveAttribute("href", "https://example.com");
+  await expect(publicPage.locator(".pf-project")).toHaveCount(1);
+  await expect(publicPage.locator(".pf-project h3")).toContainText("Мой проект");
+  await expect(publicPage.locator(".pf-project-links a")).toHaveAttribute("href", "https://example.com");
   await publicPage.goto("/en#projects");
-  await expect(publicPage.locator(".project-description")).toHaveText("I built the frontend and backend for this application.");
-  await expect(publicPage.locator(".role-label")).toHaveText("My role");
+  await expect(publicPage.locator(".pf-project-description")).toHaveText("I built the frontend and backend for this application.");
+  await expect(publicPage.locator(".pf-project-role span")).toHaveText("My role");
 
   await page.reload();
   await page.locator(".admin-project-item").filter({ hasText: "Мой проект" }).click();
@@ -77,7 +76,7 @@ test("draft, publish, translation, reload, unpublish, and delete lifecycle", asy
   await page.getByRole("button", { name: "Скрыть с сайта", exact: true }).click();
   await expect(page.getByRole("status")).toContainText("скрыт с сайта");
   await publicPage.reload();
-  await expect(publicPage.locator(".project-card")).toHaveCount(0);
+  await expect(publicPage.locator(".pf-project")).toHaveCount(0);
 
   await page.getByRole("button", { name: "Удалить проект", exact: true }).click();
   await page.getByRole("dialog").getByRole("button", { name: "Отмена", exact: true }).click();
@@ -135,8 +134,8 @@ test("cover replacement, ordering, English fallback, and admin layouts", async (
   expect(state.files).toHaveLength(2);
   const publicPage = await context.newPage();
   await publicPage.goto("/en#projects");
-  await expect(publicPage.locator(".project-card h3").first()).toContainText("Первый проект");
-  await expect(publicPage.locator(".project-description").first()).toHaveText("Разработал интерфейс и серверную часть приложения.");
+  await expect(publicPage.locator(".pf-project h3").first()).toContainText("Первый проект");
+  await expect(publicPage.locator(".pf-project-description").first()).toHaveText("Разработал интерфейс и серверную часть приложения.");
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.evaluate(() => window.scrollTo(0, 0));
   await page.screenshot({ path: testInfo.outputPath("admin-desktop.png"), fullPage: true });
@@ -145,14 +144,19 @@ test("cover replacement, ordering, English fallback, and admin layouts", async (
   await page.screenshot({ path: testInfo.outputPath("admin-mobile.png"), fullPage: true });
 });
 
-test("empty/error public states and retry", async ({ page, request }) => {
+test("local demo cases appear on a database error and published content recovers", async ({ page, request }) => {
   await request.post(`${backend}/__test/failures`, { data: { reads: true } });
   await page.goto("/ru#projects");
-  await expect(page.getByText("Не удалось загрузить проекты. Попробуйте чуть позже.")).toBeVisible();
-  await expect(page.locator(".project-card")).toHaveCount(0);
+  await expect(page.locator(".pf-project")).toHaveCount(3);
+  await expect(page.locator(".pf-project h3")).toHaveText(["forma.", "pulse.", "spot."]);
+  await expect(page.locator(".pf-demo-label")).toHaveText(Array(3).fill("Концепт"));
+  await expect(page.locator(".pf-section-heading > p:visible")).toContainText("Демонстрационные концепты");
+  await page.goto("/en#projects");
+  await expect(page.locator(".pf-demo-label")).toHaveText(Array(3).fill("Concept"));
   await request.post(`${backend}/__test/failures`, { data: {} });
-  await page.getByRole("button", { name: "Попробовать снова ↗" }).click();
+  await page.goto("/ru#projects");
   await expect(page.getByText("Новые проекты скоро появятся здесь.")).toBeVisible();
+  await expect(page.locator(".pf-project")).toHaveCount(0);
 });
 
 test("concurrent edit does not overwrite a newer saved version", async ({ page, context }) => {
@@ -198,11 +202,11 @@ test("hero streams while the projects database is still pending", async ({ page,
   try {
     await page.goto("/en", { waitUntil: "commit" });
     await expect(page.locator("h1")).toBeVisible();
-    await expect(page.locator(".projects-loading")).toContainText("Loading projects");
-    await expect(page.locator(".portrait-image")).toBeVisible();
+    await expect(page.locator(".pf-projects[aria-busy]")).toContainText("Loading projects");
+    await expect(page.locator("video")).toBeVisible();
   } finally {
     await request.post(`${backend}/__test/failures`, { data: {} });
   }
-  await expect(page.locator(".projects-loading")).toHaveCount(0);
+  await expect(page.locator(".pf-projects[aria-busy]")).toHaveCount(0);
   await expect(page.getByText("New projects will appear here soon.")).toBeVisible();
 });

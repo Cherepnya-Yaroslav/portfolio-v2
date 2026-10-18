@@ -3,6 +3,7 @@ import type { NextConfig } from "next";
 const storageUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
 
 const nextConfig: NextConfig = {
+  output: "standalone",
   distDir: process.env.PORTFOLIO_BUILD_DIR || ".next",
   allowedDevOrigins: ["127.0.0.1"],
   images: {

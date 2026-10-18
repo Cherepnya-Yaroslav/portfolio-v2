@@ -1,0 +1,60 @@
+name: yaroslav-portfolio
+
+services:
+  app:
+    image: ${APP_IMAGE:-yaroslav-portfolio-app:latest}
+    build:
+      context: .
+      args:
+        SITE_URL: ${SITE_URL}
+        PROJECTS_SOURCE: ${PROJECTS_SOURCE:-snapshot}
+        NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL:-}
+        NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY:-}
+    environment:
+      SITE_URL: ${SITE_URL}
+      PROJECTS_SOURCE: ${PROJECTS_SOURCE:-snapshot}
+      SUPABASE_NETWORK_MODE: ${SUPABASE_NETWORK_MODE:-default}
+      NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL:-}
+      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY:-}
+    volumes:
+      - app_cache:/app/.next/cache
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/admin').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    networks:
+      - internal
+
+  caddy:
+    image: caddy:2-alpine
+    depends_on:
+      app:
+        condition: service_healthy
+    environment:
+      DOMAIN: ${DOMAIN}
+      SERVER_IP: ${SERVER_IP}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    restart: unless-stopped
+    networks:
+      - internal
+
+networks:
+  internal:
+    name: ${COMPOSE_PROJECT_NAME:-yaroslav-portfolio}_backend
+    driver_opts:
+      com.docker.network.driver.mtu: "1450"
+
+volumes:
+  app_cache:
+  caddy_data:
+  caddy_config:

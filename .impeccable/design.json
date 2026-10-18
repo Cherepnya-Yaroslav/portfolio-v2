@@ -1,0 +1,340 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-18T20:26:39.345249Z",
+  "title": "Design System: Yaroslav — Pixel AI Portfolio",
+  "extensions": {
+    "colorMeta": {
+      "primary-acid": {
+        "role": "primary",
+        "displayName": "Acid Green",
+        "canonical": "#d0f475",
+        "tonalRamp": [
+          "oklch(15% 0.1589 122.69)",
+          "oklch(26% 0.1589 122.69)",
+          "oklch(38% 0.1589 122.69)",
+          "oklch(50% 0.1589 122.69)",
+          "oklch(62% 0.1589 122.69)",
+          "oklch(74% 0.1589 122.69)",
+          "oklch(86% 0.1589 122.69)",
+          "oklch(95% 0.1589 122.69)"
+        ]
+      },
+      "primary-hover": {
+        "role": "primary",
+        "displayName": "Light Acid",
+        "canonical": "#e7ffa8",
+        "tonalRamp": [
+          "oklch(15% 0.1130 121.10)",
+          "oklch(26% 0.1130 121.10)",
+          "oklch(38% 0.1130 121.10)",
+          "oklch(50% 0.1130 121.10)",
+          "oklch(62% 0.1130 121.10)",
+          "oklch(74% 0.1130 121.10)",
+          "oklch(86% 0.1130 121.10)",
+          "oklch(95% 0.1130 121.10)"
+        ]
+      },
+      "ink-bg": {
+        "role": "neutral",
+        "displayName": "Green Ink",
+        "canonical": "#151914",
+        "tonalRamp": [
+          "oklch(15% 0.0115 139.43)",
+          "oklch(26% 0.0115 139.43)",
+          "oklch(38% 0.0115 139.43)",
+          "oklch(50% 0.0115 139.43)",
+          "oklch(62% 0.0115 139.43)",
+          "oklch(74% 0.0115 139.43)",
+          "oklch(86% 0.0115 139.43)",
+          "oklch(95% 0.0115 139.43)"
+        ]
+      },
+      "ivory-fg": {
+        "role": "neutral",
+        "displayName": "Warm Ivory",
+        "canonical": "#f0f1df",
+        "tonalRamp": [
+          "oklch(15% 0.0238 109.42)",
+          "oklch(26% 0.0238 109.42)",
+          "oklch(38% 0.0238 109.42)",
+          "oklch(50% 0.0238 109.42)",
+          "oklch(62% 0.0238 109.42)",
+          "oklch(74% 0.0238 109.42)",
+          "oklch(86% 0.0238 109.42)",
+          "oklch(95% 0.0238 109.42)"
+        ]
+      },
+      "sage-muted": {
+        "role": "neutral",
+        "displayName": "Muted Sage",
+        "canonical": "#a8b4a2",
+        "tonalRamp": [
+          "oklch(15% 0.0286 135.02)",
+          "oklch(26% 0.0286 135.02)",
+          "oklch(38% 0.0286 135.02)",
+          "oklch(50% 0.0286 135.02)",
+          "oklch(62% 0.0286 135.02)",
+          "oklch(74% 0.0286 135.02)",
+          "oklch(86% 0.0286 135.02)",
+          "oklch(95% 0.0286 135.02)"
+        ]
+      },
+      "moss-line": {
+        "role": "neutral",
+        "displayName": "Moss Rule",
+        "canonical": "#3b4933",
+        "tonalRamp": [
+          "oklch(15% 0.0403 134.42)",
+          "oklch(26% 0.0403 134.42)",
+          "oklch(38% 0.0403 134.42)",
+          "oklch(50% 0.0403 134.42)",
+          "oklch(62% 0.0403 134.42)",
+          "oklch(74% 0.0403 134.42)",
+          "oklch(86% 0.0403 134.42)",
+          "oklch(95% 0.0403 134.42)"
+        ]
+      },
+      "moss-panel": {
+        "role": "neutral",
+        "displayName": "Moss Panel",
+        "canonical": "#20271b",
+        "tonalRamp": [
+          "oklch(15% 0.0239 132.52)",
+          "oklch(26% 0.0239 132.52)",
+          "oklch(38% 0.0239 132.52)",
+          "oklch(50% 0.0239 132.52)",
+          "oklch(62% 0.0239 132.52)",
+          "oklch(74% 0.0239 132.52)",
+          "oklch(86% 0.0239 132.52)",
+          "oklch(95% 0.0239 132.52)"
+        ]
+      },
+      "console-bg": {
+        "role": "neutral",
+        "displayName": "Console Black",
+        "canonical": "#0e100e",
+        "tonalRamp": [
+          "oklch(15% 0.0052 145.34)",
+          "oklch(26% 0.0052 145.34)",
+          "oklch(38% 0.0052 145.34)",
+          "oklch(50% 0.0052 145.34)",
+          "oklch(62% 0.0052 145.34)",
+          "oklch(74% 0.0052 145.34)",
+          "oklch(86% 0.0052 145.34)",
+          "oklch(95% 0.0052 145.34)"
+        ]
+      },
+      "accent-ink": {
+        "role": "neutral",
+        "displayName": "Acid Ink",
+        "canonical": "#1b2412",
+        "tonalRamp": [
+          "oklch(15% 0.0347 130.24)",
+          "oklch(26% 0.0347 130.24)",
+          "oklch(38% 0.0347 130.24)",
+          "oklch(50% 0.0347 130.24)",
+          "oklch(62% 0.0347 130.24)",
+          "oklch(74% 0.0347 130.24)",
+          "oklch(86% 0.0347 130.24)",
+          "oklch(95% 0.0347 130.24)"
+        ]
+      },
+      "contact-muted": {
+        "role": "neutral",
+        "displayName": "Contact Moss",
+        "canonical": "#42532d",
+        "tonalRamp": [
+          "oklch(15% 0.0627 128.52)",
+          "oklch(26% 0.0627 128.52)",
+          "oklch(38% 0.0627 128.52)",
+          "oklch(50% 0.0627 128.52)",
+          "oklch(62% 0.0627 128.52)",
+          "oklch(74% 0.0627 128.52)",
+          "oklch(86% 0.0627 128.52)",
+          "oklch(95% 0.0627 128.52)"
+        ]
+      },
+      "contact-line": {
+        "role": "neutral",
+        "displayName": "Contact Rule",
+        "canonical": "#9fbd58",
+        "tonalRamp": [
+          "oklch(15% 0.1329 123.32)",
+          "oklch(26% 0.1329 123.32)",
+          "oklch(38% 0.1329 123.32)",
+          "oklch(50% 0.1329 123.32)",
+          "oklch(62% 0.1329 123.32)",
+          "oklch(74% 0.1329 123.32)",
+          "oklch(86% 0.1329 123.32)",
+          "oklch(95% 0.1329 123.32)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Pixel display",
+        "purpose": "Three-line hero heading; responsive mobile and short-height overrides remain in CSS."
+      },
+      "headline": {
+        "displayName": "Pixel section heading",
+        "purpose": "Project and contact headings, including accented secondary lines."
+      },
+      "project-title": {
+        "displayName": "Project name",
+        "purpose": "Tiny5 project names with an acid full stop."
+      },
+      "title": {
+        "displayName": "Capability title",
+        "purpose": "Manrope titles explaining each technology category."
+      },
+      "body": {
+        "displayName": "Reading text",
+        "purpose": "Technology and project descriptions; the hero uses a tighter line height."
+      },
+      "label": {
+        "displayName": "Category label",
+        "purpose": "Frontend, Backend and AI category headings."
+      },
+      "control": {
+        "displayName": "Action label",
+        "purpose": "Compact primary action text; mobile permits wrapping."
+      }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "primary-color",
+        "value": "background 180ms ease, color 180ms ease",
+        "purpose": "Primary action hover; no translation or elevation."
+      },
+      {
+        "name": "navigation-color",
+        "value": "color 160ms ease",
+        "purpose": "Header navigation hover."
+      },
+      {
+        "name": "contact-color",
+        "value": "color 150ms ease",
+        "purpose": "Contact row hover on the acid surface."
+      },
+      {
+        "name": "scroll-video",
+        "value": "0.35s + progress × min(4.4s, duration − 0.45s)",
+        "purpose": "Clamped scene progress scrubs the supplied video in both directions; a 0.025s seek threshold avoids redundant seeks."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "transition-duration: 0.01ms; animation: none; scroll-behavior: auto",
+        "purpose": "Reduced motion preference; the portrait video uses a stable frame at 3.75s."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "mobile",
+        "value": "700px"
+      },
+      {
+        "name": "stacked-capabilities",
+        "value": "900px"
+      },
+      {
+        "name": "compact-desktop",
+        "value": "1050px"
+      },
+      {
+        "name": "wide-hero",
+        "value": "1800px"
+      },
+      {
+        "name": "intermediate-mobile",
+        "value": "550px–700px"
+      },
+      {
+        "name": "short-desktop",
+        "value": "max-height: 830px and min-width: 901px"
+      },
+      {
+        "name": "short-mobile",
+        "value": "max-width: 700px and max-height: 730px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary project action",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The actual acid project anchor, with clipped play marker and inline SVG arrow.",
+      "html": "<a class=\"ds-primary\" href=\"#projects\"><span class=\"ds-play\" aria-hidden=\"true\"></span>EXPLORE PROJECTS<svg viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><path d=\"M5 19 19 5M5 5h14v14\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg></a>",
+      "css": ".ds-primary{display:inline-flex;align-items:center;justify-content:center;gap:17px;min-height:52px;padding:17px 22px;border:0;border-radius:0;background:var(--pf-accent,#d0f475);color:#1b2412;font-family:\"Manrope Variable\",sans-serif;font-size:11px;font-weight:650;letter-spacing:.015em;text-decoration:none;transition:background 180ms,color 180ms;}.ds-primary:hover{background:#e7ffa8;}.ds-primary:focus-visible{outline:2px solid var(--pf-accent,#d0f475);outline-offset:6px;}.ds-primary svg{width:19px;height:19px;flex-shrink:0;}.ds-play{width:10px;height:12px;background:currentColor;clip-path:polygon(0 0,100% 50%,0 100%);}@media(max-width:700px){.ds-primary{min-height:46px;padding:12px 10px;font-size:12px;gap:7px;}.ds-primary svg{width:13px;height:13px;}.ds-play{display:none;}}"
+    },
+    {
+      "name": "Pixel header navigation",
+      "kind": "nav",
+      "description": "Robot wordmark, section anchors and a locale link; the locale click handler lives in the application.",
+      "html": "<header class=\"ds-header\"><a class=\"ds-wordmark\" href=\"#hero\" aria-label=\"Yaroslav — home\"><svg viewBox=\"0 0 48 48\" fill=\"currentColor\" aria-hidden=\"true\" shape-rendering=\"crispEdges\"><path d=\"M22 2h4v8h10v4h6v20h-6v8h-8v-6h-8v6h-8v-8H6V14h6v-4h10V2ZM12 16v14h24V16H12Zm4 4h4v6h-4v-6Zm12 0h4v6h-4v-6ZM2 20h4v10H2V20Zm40 0h4v10h-4V20Z\"/></svg><span>YA<span class=\"ds-accent\">_</span></span></a><nav class=\"ds-nav\" aria-label=\"Main navigation\"><a href=\"#about\">Stack</a><a href=\"#projects\">Projects</a><a href=\"#contact\">Contact</a></nav><a class=\"ds-language\" href=\"/ru\" lang=\"ru\" aria-label=\"Переключить на русский\">RU<svg viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><path d=\"M5 19 19 5M5 5h14v14\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg></a></header>",
+      "css": ".ds-header{display:flex;align-items:center;justify-content:space-between;gap:30px;height:80px;border-bottom:1px solid var(--pf-line,#3b4933);background:var(--pf-bg,#151914);color:var(--pf-fg,#f0f1df);font-family:\"Manrope Variable\",sans-serif;}.ds-header a{color:inherit;text-decoration:none;}.ds-header a:focus-visible{outline:2px solid var(--pf-accent,#d0f475);outline-offset:6px;}.ds-wordmark{display:flex;align-items:center;font-family:\"Tiny5\",monospace;font-size:35px;font-weight:700;line-height:1;}.ds-wordmark svg{width:38px;height:38px;color:var(--pf-accent,#d0f475);}.ds-accent{color:var(--pf-accent,#d0f475);}.ds-nav{display:flex;gap:32px;font-size:13px;}.ds-nav a{padding-block:15px;color:var(--pf-muted,#a8b4a2);transition:color 160ms;}.ds-nav a:hover{color:var(--pf-accent,#d0f475);}.ds-language{display:flex;align-items:center;gap:8px;padding:10px 0 10px 15px;font-size:12px;}.ds-language svg{width:13px;height:13px;color:var(--pf-accent,#d0f475);}@media(max-width:700px){.ds-header{height:68px;gap:15px;}.ds-wordmark{font-size:25px;gap:7px;}.ds-wordmark svg{width:26px;height:26px;}.ds-nav{gap:17px;font-size:12px;}.ds-language{gap:3px;padding-left:0;}}"
+    },
+    {
+      "name": "Technology tag",
+      "kind": "chip",
+      "refersTo": "technology-tag",
+      "description": "A non-interactive square technology label. It has no hover or selected state in the source.",
+      "html": "<ul class=\"ds-tags\"><li>Codex</li><li>Higgsfield</li><li>RAG</li><li>MCP</li><li>Skills</li></ul>",
+      "css": ".ds-tags{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0;list-style:none;}.ds-tags li{font-family:\"Manrope Variable\",sans-serif;font-size:11px;line-height:1.5;color:var(--pf-muted,#a8b4a2);background:var(--pf-panel,#20271b);padding:6px 11px;border:1px solid var(--pf-line,#3b4933);border-radius:0;}@media(max-width:700px){.ds-tags{gap:6px;}.ds-tags li{padding:6px 9px;}}"
+    },
+    {
+      "name": "Themed skip link",
+      "kind": "custom",
+      "refersTo": "skip-link",
+      "description": "Focus the link with the keyboard to reveal the actual square acid skip action. The snippet supplies its main target.",
+      "html": "<div class=\"ds-skip-preview\"><a class=\"ds-skip\" href=\"#ds-main\">Skip to content</a><main class=\"ds-skip-main\" id=\"ds-main\" tabindex=\"-1\">Keyboard access to main content</main></div>",
+      "css": ".ds-skip-preview{position:relative;padding:70px 12px 20px;background:var(--pf-bg,#151914);color:var(--pf-fg,#f0f1df);font-family:\"Manrope Variable\",sans-serif;}.ds-skip{position:absolute;top:12px;left:12px;z-index:100;padding:15px 22px;border-radius:0;background:var(--pf-accent,#d0f475);color:var(--pf-bg,#151914);text-decoration:none;transform:translateY(-160%);}.ds-skip:focus{transform:translateY(0);}.ds-skip:focus-visible{outline:2px solid var(--pf-accent,#d0f475);outline-offset:6px;}.ds-skip-main{font-size:13px;}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Pixel product console",
+    "overview": "A dark, green-black workspace pairs bitmap headings and an acid green signal with clear, quiet body text. The robot wordmark, executable-window frame and square controls give the portfolio a consistent pixel identity. The personal portrait stays photographic inside the console; project previews retain their own product colors.\n\nThe system supports Ярослав / Yaroslav as an AI developer who takes a product from idea to launch. Text stays direct about products, services and AI. This record describes the selected main `/ru` and `/en` experience; its authority is the implemented Pixel surface, not archived alternate studies or inherited global theme defaults.",
+    "keyCharacteristics": [
+      "Bitmap display lettering paired with readable Manrope body text.",
+      "Acid green actions and console chrome on a green-black ground.",
+      "Square geometry, thin structural rules and flat sections.",
+      "A scroll-controlled portrait console and a full-width inverted contact footer.",
+      "Equivalent Russian and English surfaces with the current section retained when switching language."
+    ],
+    "rules": [
+      {
+        "name": "The Signal and Inversion Rule",
+        "body": "Use acid for emphasis and action on dark sections; the contact section deliberately inverts the relationship into an acid ground with dark text. Scope its muted and divider colors to that surface.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two Voices Rule",
+        "body": "Use Tiny5 for identity and display hierarchy, and Manrope for reading and task controls. Retain both voices in both locales.",
+        "section": "typography"
+      },
+      {
+        "name": "The Framed Depth Rule",
+        "body": "Separate interface regions with color and rules. Preserve the console sticker's small overlap without adding a global drop-shadow system.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do use the Pixel palette and square control geometry on the main Russian and English routes.",
+      "Do pair Tiny5 identity and display text with Manrope reading text.",
+      "Do keep Frontend, Backend and AI as distinct capability groups, with the requested AI tools in AI.",
+      "Do use ruled project rows, preserve real preview artwork, and label demonstration concepts honestly.",
+      "Do keep the laptop interaction reversible and honor reduced-motion, loading and failure states.",
+      "Do preserve visible keyboard focus, the themed skip link and reachable localized contact links.",
+      "Do maintain the acid contact inversion with its own dark text and divider colors."
+    ],
+    "donts": [
+      "Don't use archived alternate studies or legacy global theme colors as authority for new public surfaces.",
+      "Don't turn the square controls, tags or preview frames into rounded pills or glass panels.",
+      "Don't add a shadow system to flat sections or replace their structural rules with decorative effects.",
+      "Don't treat project artwork colors, generated tonal ramps or occasional status details as new UI primitives.",
+      "Don't add decorative page kickers by copying native console status labels.",
+      "Don't add unverified clients, experience metrics, availability or deployment claims to the visual story."
+    ]
+  }
+}
