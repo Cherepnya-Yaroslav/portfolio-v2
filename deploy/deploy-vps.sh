@@ -102,5 +102,5 @@ while read -r tag identifier; do
     docker image rm "$tag" >/dev/null || true
   fi
 done < <(docker image ls --no-trunc --format '{{.Repository}}:{{.Tag}} {{.ID}}')
-docker builder prune --force --filter until=24h --keep-storage 1GB >/dev/null || echo 'Build cache cleanup will retry next deployment.' >&2
+docker builder prune --all --force --keep-storage 1GB >/dev/null || echo 'Build cache cleanup will retry next deployment.' >&2
 echo "Deployed $revision"
