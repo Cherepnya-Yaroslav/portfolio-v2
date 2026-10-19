@@ -169,7 +169,7 @@ test("video scrubs forward, reverses, and respects reduced motion", async ({
 test("video failure keeps the page and contact navigation usable", async ({
   page,
 }) => {
-  await page.route("**/video/laptop-scroll.mp4", (route) => route.abort());
+  await page.route("**/video/laptop-scroll*.mp4*", (route) => route.abort());
   await page.goto("/en");
   await expect(page.locator(".pf-video-status")).toContainText(
     "Video unavailable",

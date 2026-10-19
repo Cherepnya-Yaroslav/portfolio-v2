@@ -14,6 +14,13 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [{ source: "/", destination: "/ru", permanent: false }];
   },
+  async headers() {
+    return [{
+      source: "/video/:file*",
+      has: [{ type: "query", key: "v", value: "[a-f0-9]{12}" }],
+      headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
+    }];
+  },
 };
 
 export default nextConfig;

@@ -3,6 +3,7 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import type { Locale } from "@/content/portfolio";
 import { PixelRobot } from "./icons";
+import { observePortfolioVideo } from "@/lib/portfolio-video-loading";
 import "./portfolio-loading.css";
 
 type RegisterVideo = (video: HTMLVideoElement) => () => void;
@@ -23,41 +24,11 @@ export function PortfolioLoading({ locale, children }: { locale: Locale; childre
   }, []);
 
   const registerVideo = useCallback<RegisterVideo>((video) => {
-    let lastBuffered = 0;
-    // Release the site if the video stops making progress for fifteen seconds.
-    let stallTimeout = window.setTimeout(finish, 15000);
-    function finishLoading() {
-      clearTimeout(stallTimeout);
-      finish();
-    }
-    function update() {
-      if (!Number.isFinite(video.duration) || video.duration <= 0) return;
-      let buffered = 0;
-      for (let index = 0; index < video.buffered.length; index++) {
-        buffered += video.buffered.end(index) - video.buffered.start(index);
-      }
-      const complete = video.readyState >= 2 && video.buffered.length === 1
-        && video.buffered.start(0) < 0.1 && video.buffered.end(0) >= video.duration - 0.1;
-      if (complete) { finishLoading(); return; }
-      if (buffered > lastBuffered) {
-        lastBuffered = buffered;
-        clearTimeout(stallTimeout);
-        stallTimeout = window.setTimeout(finish, 15000);
-      }
-      const progress = Math.min(99, Math.floor(buffered / video.duration * 100));
-      setLoad((current) => current.complete || progress <= current.progress ? current : { progress, complete: false });
-    }
-
-    const events = ["loadedmetadata", "loadeddata", "canplaythrough", "progress", "suspend"];
-    events.forEach((event) => video.addEventListener(event, update));
-    video.addEventListener("error", finishLoading);
-    update();
-    if (video.error) finishLoading();
-    return () => {
-      clearTimeout(stallTimeout);
-      events.forEach((event) => video.removeEventListener(event, update));
-      video.removeEventListener("error", finishLoading);
-    };
+    return observePortfolioVideo(video, {
+      onReady: finish,
+      onProgress: (progress) => setLoad((current) =>
+        current.complete || progress <= current.progress ? current : { progress, complete: false }),
+    });
   }, [finish]);
 
   useEffect(() => {

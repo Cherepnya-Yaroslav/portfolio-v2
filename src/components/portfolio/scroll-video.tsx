@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type RefObject } from "react";
 import { ArrowIcon } from "@/components/icons";
 import type { Locale } from "@/content/portfolio";
+import { portfolioVideo } from "@/content/portfolio-video";
 import { usePortfolioVideoLoading } from "./portfolio-loading";
 
 type ScrollVideoProps = {
@@ -76,7 +77,7 @@ export function ScrollVideo({ sceneRef, locale }: ScrollVideoProps) {
     window.addEventListener("scroll", requestUpdate, { passive: true });
     window.addEventListener("resize", requestUpdate);
     preference.addEventListener("change", preferenceChanged);
-    if (video.error) failed();
+    if (video.error || video.networkState === video.NETWORK_NO_SOURCE) failed();
     if (video.readyState >= 2) loaded();
 
     return () => {
@@ -97,8 +98,7 @@ export function ScrollVideo({ sceneRef, locale }: ScrollVideoProps) {
       <video
         ref={videoRef}
         className="pf-video"
-        src="/video/laptop-scroll.mp4"
-        poster="/video/laptop-poster.webp"
+        poster={portfolioVideo.poster}
         muted
         playsInline
         preload="auto"
@@ -107,7 +107,10 @@ export function ScrollVideo({ sceneRef, locale }: ScrollVideoProps) {
             ? "Ярослав открывает ноутбук при прокрутке вниз и закрывает при прокрутке вверх"
             : "Yaroslav opens the laptop as you scroll down and closes it as you scroll up"
         }
-      />
+      >
+        <source src={portfolioVideo.mobile} media="(max-width: 700px)" type="video/mp4" />
+        <source src={portfolioVideo.desktop} type="video/mp4" onError={() => setFailed(true)} />
+      </video>
       <div className="pf-video-progress" ref={progressRef} aria-hidden="true">
         <span />
       </div>
