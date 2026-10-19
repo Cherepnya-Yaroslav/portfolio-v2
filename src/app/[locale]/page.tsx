@@ -5,6 +5,7 @@ import { copy, isLocale } from "@/content/portfolio";
 import { pixelCopy } from "@/content/pixel-portfolio";
 import { PixelHero } from "@/components/portfolio/pixel-hero";
 import { TechnologySection } from "@/components/portfolio/technology-section";
+import { Testimonials } from "@/components/portfolio/testimonials";
 import { PortfolioLoading } from "@/components/portfolio/portfolio-loading";
 import {
   Projects,
@@ -67,6 +68,7 @@ export default async function Portfolio({ params }: PageProps) {
           <Suspense fallback={<ProjectsLoading locale={locale} />}>
             <Projects locale={locale} />
           </Suspense>
+          <Testimonials locale={locale} />
         </main>
         <Contact locale={locale} />
       </PortfolioLoading>
